@@ -23,7 +23,6 @@ keras
     |- setup.py
 
 
-
 ===========================================
 .github
     |- ISSUE_TEMPLATE
