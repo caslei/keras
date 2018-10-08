@@ -1,0 +1,310 @@
+keras
+    |- .github
+    |- docker
+    |- docs
+    |- examples
+    |- keras
+    |- keras-applications
+    |- keras-contrib
+    |- keras-preprocessing
+    |- tests
+    |- .coveragerc
+    |- .gitignore
+    |- .travis.yml
+    |- CONTRIBUTING.md
+    |- intro.txt
+    |- ISSUE_TEMPLATE.md
+    |- LICENSE
+    |- MANIFEST.in
+    |- PULL_REQUEST_TEMPLATE.md
+    |- pytest.ini
+    |- README.md
+    |- setup.cfg
+    |- setup.py
+
+
+
+===========================================
+.github
+    |- ISSUE_TEMPLATE
+        |- a--tensorflow-backend-users.md
+        |- b--theano-backend-users.md
+        |- c--cntk-backend-users.md
+    |- stale.yml
+
+===========================================
+docker
+    |- Dockerfile
+    |- Makefile
+    |- README.md
+    |- theanorc
+
+===========================================
+docs
+    |- templates
+        |- getting-started
+            |- faq.md
+            |- functional-api-guide.md
+            |- sequential-model-guide.md
+
+        |- layers
+            |- about-keras-layers.md
+            |- writing-your-own-keras-layers.md
+
+        |- models
+            |- about-keras-models.md
+            |- model.md
+            |- sequential.md
+
+        |- preprocessing
+            |- image.md
+            |- text.md
+
+        |- activations.md
+        |- applications.md
+        |- backend.md
+        |- callbacks.md
+        |- constraints.md
+        |- datasets.md
+        |- index.md
+        |- initializers.md
+        |- losses.md
+        |- metrics.md
+        |- optimizers.md
+        |- regularizers.md
+        |- scikit-learn-api.md
+        |- visualization.md
+        |- why-use-keras.md
+
+    |- __init__.py
+    |- autogen.py
+    |- mkdocs.yml
+    |- README.md
+
+===========================================
+examples
+    |- addition_rnn.py
+    |- antirectifier.py
+    |- babi_memnn.py
+    |- babi_rnn.py
+    |- cifar10_cnn.py
+    |- cifar10_cnn_capsule.py
+    |- cifar10_cnn_tfaugment2d.py
+    |- cifar10_resnet.py
+    |- conv_filter_visualization.py
+    |- conv_lstm.py
+    |- deep_dream.py
+    |- image_ocr.py
+    |- imdb_bidirectional_lstm.py
+    |- imdb_cnn.py
+    |- imdb_cnn_lstm.py
+    |- imdb_fasttext.py
+    |- imdb_lstm.py
+    |- lstm_seq2seq.py
+    |- lstm_seq2seq_restore.py
+    |- lstm_stateful.py
+    |- lstm_text_generation.py
+    |- mnist_acgan.py
+    |- mnist_cnn.py
+    |- mnist_dataset_api.py
+    |- mnist_denoising_autoencoder.py
+    |- mnist_hierarchical_rnn.py
+    |- mnist_irnn.py
+    |- mnist_mlp.py
+    |- mnist_net2net.py
+    |- mnist_siamese.py
+    |- mnist_sklearn_wrapper.py
+    |- mnist_swwae.py
+    |- mnist_tfrecord.py
+    |- mnist_transfer_cnn.py
+    |- neural_doodle.py
+    |- neural_style_transfer.py
+    |- pretrained_word_embeddings.py
+    |- README.md
+    |- reuters_mlp.py'
+    |- reuters_mlp_relu_vs_selu.py
+    |- tensorboard_embeddings_mnist.py
+    |- variational_autoencoder.py
+    |- variational_autoencoder_deconv.py
+
+===========================================
+keras
+    |- applications
+        |- densenet.py
+        |- imagenet_utils.py
+        |- inception_resnet_v2.py
+        |- inception_v3.py
+        |- mobilenet.py
+        |- mobilenetv2.py
+        |- mobilenet_v2.py
+        |- nasnet.py
+        |- resnet50.py
+        |- vgg16.py
+        |- vgg19.py
+        |- xception.py
+        |- __init__.py
+
+    |- backend
+        |- cntk_backend.py
+        |- common.py
+        |- tensorflow_backend.py
+        |- theano_backend.py
+        |- __init__.py
+
+    |- datasets
+        |- boston_housing.py
+        |- cifar.py
+        |- cifar10.py
+        |- cifar100.py
+        |- fashion_mnist.py
+        |- imdb.py
+        |- mnist.py
+        |- reuters.py
+        |- __init__.py
+
+    |- engine
+        |- base_layer.py
+        |- input_layer.py
+        |- network.py
+        |- saving.py
+        |- sequential.py
+        |- topology.py
+        |- training.py
+        |- training_arrays.py
+        |- training_generator.py
+        |- training_utils.py
+        |- __init__.py
+
+    |- layers
+        |- advanced_activations.py
+        |- convolutional.py
+        |- convolutional_recurrent.py
+        |- core.py
+        |- cudnn_recurrent.py
+        |- embeddings.py
+        |- local.py
+        |- merge.py
+        |- noise.py
+        |- normalization.py
+        |- pooling.py
+        |- recurrent.py
+        |- wrappers.py
+        |- __init__.py
+
+    |- legacy
+        |- interfaces.py
+        |- layers.py
+        |- __init__.py
+
+    |- preprocessing
+        |- image.py
+        |- sequence.py
+        |- text.py
+        |- __init__.py
+
+    |- utils
+        |- conv_utils.py
+        |- data_utils.py
+        |- generic_utils.py
+        |- io_utils.py
+        |- layer_utils.py
+        |- multi_gpu_utils.py
+        |- np_utils.py
+        |- test_utils.py
+        |- vis_utils.py
+        |- __init__.py
+
+    |- wrappers
+        |- scikit_learn.py
+        |- __init__.py    
+
+    |- activations.py
+    |- callbacks.py
+    |- constraints.py
+    |- initializers.py
+    |- losses.py
+    |- metrics.py
+    |- models.py
+    |- objectives.py
+    |- optimizers.py
+    |- regularizers.py
+    |- __init__.py
+
+===========================================
+tests
+    |- integration_tests
+        |- preprocessing
+            |- image_test.py
+            |- sequence_test.py
+            |- text_test.py            
+
+        |- applications_test.py
+        |- imagenet_utils_test.py
+        |- test_datasets.py
+        |- test_image_data_tasks.py
+        |- test_temporal_data_tasks.py
+        |- test_tensorflow_integration.py
+        |- test_vector_data_tasks.py
+
+    |- keras
+        |- backend
+            |- backend_test.py
+            |- reference_operations.py
+
+        |- engine
+            |- test_topology.py
+            |- test_training.py
+
+        |- layers
+            |- advanced_activations_test.py
+            |- convolutional_recurrent_test.py
+            |- convolutional_test.py
+            |- core_test.py
+            |- cudnn_recurrent_test.py
+            |- embeddings_test.py
+            |- local_test.py
+            |- merge_test.py
+            |- noise_test.py
+            |- normalization_test.py
+            |- pooling_test.py
+            |- recurrent_test.py
+            |- wrappers_test.py
+
+        |- legacy
+            |- interface_test.py
+            |- layers_test.py
+
+        |- utils
+            |- conv_utils_test.py
+            |- data_utils_test.py
+            |- generic_utils_test.py
+            |- io_utils_test.py
+            |- layer_utils_test.py
+            |- multi_gpu_test.py
+            |- np_utils_test.py
+            |- vis_utils_test.py
+
+        |- wrappers
+            |- scikit_learn_test.py
+
+        |- activations_test.py
+        |- constraints_test.py
+        |- initializers_test.py
+        |- losses_test.py
+        |- metrics_test.py
+        |- optimizers_test.py
+        |- regularizers_test.py
+        |- test_callbacks.py
+        |- test_sequential_model.py
+
+    |- conftest.py
+    |- test_documentation.py
+    |- test_doc_auto_generation.py
+    |- test_dynamic_trainability.py
+    |- test_loss_masking.py
+    |- test_loss_weighting.py
+    |- test_model_pickling.py
+    |- test_model_saving.py
+    |- test_multiprocessing.py
+
+
