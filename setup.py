@@ -60,6 +60,7 @@ setup(name='Keras',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.6',
           'Topic :: Software Development :: Libraries',
-          'Topic :: Software Development :: Libraries :: Python Modules'
+          'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      packages=find_packages())
+      packages=find_packages(),
+      )
