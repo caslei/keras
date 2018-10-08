@@ -321,6 +321,8 @@ tests
 
 # YAML 语言教程
 # http://www.ruanyifeng.com/blog/2016/07/yaml.html
+
+
 # ===============================================
 # 它的基本语法规则如下：
 #         大小写敏感
@@ -443,3 +445,18 @@ tests
 #     - Brian 
 #     - Oren 
 #     - *showell 
+
+
+
+setuptools:
+    python包管理工具
+    Python包管理工具setuptools详解
+    http://yansu.org/2013/06/07/learn-python-setuptools-in-detail.html
+
+from setuptools import setup, find_packages
+description =''' 详细的描述工具包的功能与特色 '''
+setup( name = "demo",
+       version = "0.1",
+       description = description，
+       packages = find_packages(),
+     )
