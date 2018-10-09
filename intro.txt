@@ -532,4 +532,43 @@ regularization) are turned off at testing time.
 #                                         [model.layers[3].output])
 #       layer_output = get_3rd_layer_output([x])[0]
 #
+#
+#    3. get_3rd_layer_output = K.function([model.layers[0].input, K.learning_phase()],
+#                                         [model.layers[3].output])
+#       # output in test mode = 0
+#       layer_output = get_3rd_layer_output([x, 0])[0]
+#
+#       # output in train mode = 1
+#       layer_output = get_3rd_layer_output([x, 1])[0]
+#
 #=======================================================
+
+
+
+if the `shuffle` argument in `model.fit` is set to `True` (which is the default), 
+the training data will be randomly shuffled at each epoch.
+
+Validation data is never shuffled.
+
+
+
+hist = model.fit(x, y, validation_split=0.2)
+print(hist.history)
+
+
+
+#=======================================================
+    x = Input(shape=(32,))
+    layer = Dense(32)
+    layer.trainable = False
+    y = layer(x)
+
+    frozen_model = Model(x, y)
+    # the weights of `layer` will not be updated during training
+    frozen_model.compile(optimizer='rmsprop', loss='mse')
+
+    layer.trainable = True
+    trainable_model = Model(x, y)
+    # the weights of the layer will be updated during training
+    # (which will also affect the above model since it uses the same layer instance)
+    trainable_model.compile(optimizer='rmsprop', loss='mse')
