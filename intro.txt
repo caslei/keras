@@ -584,3 +584,31 @@ print(hist.history)
     4883664951434749476
 
     C:\Users\lwang> CUDA_VISIBLE_DEVICES="" PYTHONHASHSEED=0 python your_program.py
+
+
+
+#=======================================================
+    from keras.layers import Conv2D, MaxPooling2D, Input, Dense, Flatten
+    from keras.models import Model
+
+    # (1) define the basic modules
+    digit_input = Input(shape=(27, 27, 1))
+    x = Conv2D(64, (3, 3))(digit_input)
+    x = Conv2D(64, (3, 3))(x)
+    x = MaxPooling2D((2, 2))(x)
+    out = Flatten()(x)
+    #######################################
+    basic_model = Model(digit_input, out) 
+    #######################################
+
+    # (2) define new model using basic model as a layer
+    digit_a = Input(shape=(27, 27, 1))
+    digit_b = Input(shape=(27, 27, 1))
+
+    # (3) basic model will be shared, weights and all
+    out_a = basic_model(digit_a)
+    out_b = basic_model(digit_b)
+
+    concatenated = keras.layers.concatenate([out_a, out_b])
+    out = Dense(1, activation='sigmoid')(concatenated)
+    classification_model = Model([digit_a, digit_b], out)
