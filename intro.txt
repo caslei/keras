@@ -572,3 +572,13 @@ print(hist.history)
     # the weights of the layer will be updated during training
     # (which will also affect the above model since it uses the same layer instance)
     trainable_model.compile(optimizer='rmsprop', loss='mse')
+
+    print(len(trainable_model.layers))
+
+
+
+C:\Users\lwang> PYTHONHASHSEED=0 python3 test_hash.py # reproducible hash
+4883664951434749476
+
+C:\Users\lwang> PYTHONHASHSEED=0 python3 test_hash.py # reproducible hash
+4883664951434749476    
