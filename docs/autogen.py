@@ -84,7 +84,9 @@ from keras import activations
 from keras import preprocessing
 
 import sys
-if sys.version[0] == '2':
+# if it is python 2.XX, then use 'reload' function
+# 'reload' is not built-in function in Python 3.XX
+if sys.version[0] == '2': 
     reload(sys)
     sys.setdefaultencoding('utf8')
 
@@ -623,6 +625,10 @@ def read_page_data(page_data, type):
     return data
 
 
+
+
+#==================================================================
+#==================================================================
 if __name__ == '__main__':
     readme = read_file('../README.md')
     index = read_file('templates/index.md')
