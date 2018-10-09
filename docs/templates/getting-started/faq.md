@@ -1,4 +1,4 @@
-# Keras FAQ: Frequently Asked Keras Questions
+# Keras FAQ: Frequently Asked Keras Questions (very important)
 
 - [How should I cite Keras?](#how-should-i-cite-keras)
 - [How can I run Keras on GPU?](#how-can-i-run-keras-on-gpu)
