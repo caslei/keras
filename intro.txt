@@ -458,3 +458,24 @@ setup( name = "demo",
        description = description，
        packages = find_packages(),
      )
+
+
+Activations can either be used through an `Activation` layer, or through the `activation` argument supported by all forward layers
+You can also pass an element-wise TensorFlow function as an activation
+(1) model.add(Activation('tanh'))
+(2) model.add(Dense(64, activation='tanh'))
+(3) model.add(Dense(64, activation=keras.backend.tanh))
+
+
+#=======================================================
+#
+#   How to fine-tuning a predefined model:
+#      1. have to freeze all layers of the predefined
+#         model with relatively learning rate,
+#         and then train the fine-tuned model
+#
+#      2. Among all of freezed layers, unfreeze some 
+#         top layers of the predefined models, and then 
+#         train again with low learning rate
+#
+#=======================================================
