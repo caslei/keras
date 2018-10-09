@@ -576,9 +576,11 @@ print(hist.history)
     print(len(trainable_model.layers))
 
 
+ How to obtain reproducible results
+    C:\Users\lwang> PYTHONHASHSEED=0 python3 test_hash.py # reproducible hash
+    4883664951434749476
 
-C:\Users\lwang> PYTHONHASHSEED=0 python3 test_hash.py # reproducible hash
-4883664951434749476
+    C:\Users\lwang> PYTHONHASHSEED=0 python3 test_hash.py # reproducible hash
+    4883664951434749476
 
-C:\Users\lwang> PYTHONHASHSEED=0 python3 test_hash.py # reproducible hash
-4883664951434749476    
+    C:\Users\lwang> CUDA_VISIBLE_DEVICES="" PYTHONHASHSEED=0 python your_program.py
