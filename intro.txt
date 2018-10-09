@@ -479,3 +479,27 @@ You can also pass an element-wise TensorFlow function as an activation
 #         train again with low learning rate
 #
 #=======================================================
+
+
+
+Plot a graph of the model and save it to a file:
+    from keras.utils import plot_model
+    plot_model(model, to_file='model.png')
+
+
+
+Saving/loading whole models (architecture + weights + optimizer state)
+    from keras.models import load_model
+
+    model.save('my_model.h5')  # creates a HDF5 file 'my_model.h5'
+    del model  # deletes the existing model
+
+    # returns a compiled model identical to the previous one
+    model = load_model('my_model.h5')
+
+
+
+Saving/loading only a model's weights
+    model.save_weights('my_model_weights.h5')
+    model.load_weights('my_model_weights.h5')
+
