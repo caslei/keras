@@ -666,3 +666,23 @@ __init__.py的作用：
     (2) 文件夹的导入(内含 __init__.py )
     (3) .py中函数，变量的导入
     (4) 函数或者变量的重新命名
+
+
+
+#======================================================
+#
+#    get the symbolic outputs of each "key" layer
+#
+#   layer_dict = dict([
+#      (layer.name, layer) for layer in model.layers
+#                    ])
+#
+#   layer_output = layer_dict[layer_name].output
+#
+#======================================================
+
+
+
+keras.backend.function():
+    iterate = K.function(inputs=[input_img], outputs=[loss, grads])
+    loss_value, grads_value = iterate([input_img_data])
