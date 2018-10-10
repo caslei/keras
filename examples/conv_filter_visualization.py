@@ -50,9 +50,10 @@ model.summary()
 # this is the placeholder for the input images
 input_img = model.input
 
+#======================================================
 # get the symbolic outputs of each "key" layer (we gave them unique names).
 layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
-
+#======================================================
 
 def normalize(x):
     # utility function to normalize a tensor by its L2 norm
@@ -93,6 +94,7 @@ for filter_index in range(200):
         input_img_data = np.random.random((1, img_width, img_height, 3))
     input_img_data = (input_img_data - 0.5) * 20 + 128
 
+    #-----------------------------------------------------------
     # we run gradient ascent for 20 steps
     for i in range(20):
         loss_value, grads_value = iterate([input_img_data])
@@ -109,6 +111,8 @@ for filter_index in range(200):
         kept_filters.append((img, loss_value))
     end_time = time.time()
     print('Filter %d processed in %ds' % (filter_index, end_time - start_time))
+
+
 
 # we will stich the best 64 filters on a 8 x 8 grid.
 n = 8
