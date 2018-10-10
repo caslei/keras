@@ -99,7 +99,7 @@ model.compile(optimizer='rmsprop',
 # Generate dummy data
 import numpy as np
 data = np.random.random((1000, 100))
-labels = np.random.randint(2, size=(1000, 1))
+labels = np.random.randint(2, size=(1000, 1)) # take 1000 values in the range from 0 to 2
 
 # Train the model, iterating on the data in batches of 32 samples
 model.fit(data, labels, epochs=10, batch_size=32)
@@ -120,7 +120,7 @@ import numpy as np
 data = np.random.random((1000, 100))
 labels = np.random.randint(10, size=(1000, 1))
 
-# Convert labels to categorical one-hot encoding
+# Convert labels to categorical 'one-hot' encoding
 one_hot_labels = keras.utils.to_categorical(labels, num_classes=10)
 
 # Train the model, iterating on the data in batches of 32 samples
@@ -175,10 +175,10 @@ model.compile(loss='categorical_crossentropy',
               optimizer=sgd,
               metrics=['accuracy'])
 
-model.fit(x_train, y_train,
-          epochs=20,
-          batch_size=128)
-score = model.evaluate(x_test, y_test, batch_size=128)
+# How to find the relationship between 'model_shape' and 'input_data'
+model.fit(x_train, y_train, epochs=20, batch_size=128) # only using training datasets
+score = model.evaluate(x_test, y_test, batch_size=128) # only using validation datasets
+# 'score' is merely used to evaluate the trained model
 ```
 
 
@@ -206,9 +206,7 @@ model.compile(loss='binary_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
-model.fit(x_train, y_train,
-          epochs=20,
-          batch_size=128)
+model.fit(x_train, y_train, epochs=20, batch_size=128)
 score = model.evaluate(x_test, y_test, batch_size=128)
 ```
 
