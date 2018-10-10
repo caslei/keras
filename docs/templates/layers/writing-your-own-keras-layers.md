@@ -12,6 +12,7 @@ Here is the skeleton of a Keras layer, **as of Keras 2.0** (if you have an older
 from keras import backend as K
 from keras.engine.topology import Layer
 
+# base class 'Layer'
 class MyLayer(Layer):
 
     def __init__(self, output_dim, **kwargs):
@@ -46,7 +47,7 @@ class MyLayer(Layer):
         super(MyLayer, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        assert isinstance(input_shape, list)
+        assert isinstance(input_shape, list) # type: 'list'
         # Create a trainable weight variable for this layer.
         self.kernel = self.add_weight(name='kernel',
                                       shape=(input_shape[0][1], self.output_dim),
