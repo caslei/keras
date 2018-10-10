@@ -654,6 +654,15 @@ If the layer has multiple nodes, you can use the following methods:
 #
 #               keras.engine.topology.Layer
 #
+#           How to customize layers for keras
+#
 #          Never hesitate to read the source code!
 #
 #==================================================================
+
+
+__init__.py的作用：
+    (1) .py文件的导入
+    (2) 文件夹的导入(内含 __init__.py )
+    (3) .py中函数，变量的导入
+    (4) 函数或者变量的重新命名
