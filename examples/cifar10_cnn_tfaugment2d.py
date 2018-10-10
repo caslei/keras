@@ -78,9 +78,9 @@ def augment_2d(inputs, rotation=0, horizontal_flip=False, vertical_flip=False):
 
         if rotation > 0:
             angle_rad = rotation * 3.141592653589793 / 180.0
+            # 随机取'batch_size'个角度值
             angles = tf.random_uniform([batch_size], -angle_rad, angle_rad)
-            f = tf.contrib.image.angles_to_projective_transforms(angles,
-                                                                 height, width)
+            f = tf.contrib.image.angles_to_projective_transforms(angles, height, width)
             transforms.append(f)
 
         if horizontal_flip:
@@ -100,9 +100,11 @@ def augment_2d(inputs, rotation=0, horizontal_flip=False, vertical_flip=False):
             transforms.append(tf.where(coin, flip, noflip))
 
     if transforms:
-        f = tf.contrib.image.compose_transforms(*transforms)
+        f = tf.contrib.image.compose_transforms(*transforms) # compose all transforms
         inputs = tf.contrib.image.transform(inputs, f, interpolation='BILINEAR')
     return inputs
+
+
 
 
 batch_size = 32
@@ -123,9 +125,13 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Lambda(augment_2d,
-                 input_shape=x_train.shape[1:],
-                 arguments={'rotation': 8.0, 'horizontal_flip': True}))
+
+# 'augment_2d' function
+model.add(Lambda(augment_2d, 
+                input_shape=x_train.shape[1:],
+                arguments={'rotation': 8.0, 'horizontal_flip': True}
+                )
+         )
 model.add(Conv2D(32, (3, 3), padding='same'))
 model.add(Activation('relu'))
 model.add(Conv2D(32, (3, 3)))
@@ -170,7 +176,8 @@ model.fit(x_train, y_train,
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
 model_path = os.path.join(save_dir, model_name)
-model.save(model_path)
+
+model.save(model_path) # ----------------------
 print('Saved trained model at %s ' % model_path)
 
 # Score trained model.
