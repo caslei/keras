@@ -126,12 +126,15 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
 
+##########################################################
 # 'augment_2d' function
 model.add(Lambda(augment_2d, 
                 input_shape=x_train.shape[1:],
                 arguments={'rotation': 8.0, 'horizontal_flip': True}
                 )
          )
+##########################################################
+
 model.add(Conv2D(32, (3, 3), padding='same'))
 model.add(Activation('relu'))
 model.add(Conv2D(32, (3, 3)))
