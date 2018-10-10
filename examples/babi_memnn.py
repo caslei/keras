@@ -88,6 +88,8 @@ def get_stories(f, only_supporting=False, max_length=None):
 def vectorize_stories(data):
     inputs, queries, answers = [], [], []
     for story, query, answer in data:
+      # 'word_idx'在函数内没有定义，说明它已经在调用前被定义过！！！
+      # 这种用法非常不同于其它编程语言！！！
         inputs.append([word_idx[w] for w in story])
         queries.append([word_idx[w] for w in query])
         answers.append(word_idx[answer])
