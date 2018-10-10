@@ -80,7 +80,7 @@ class Capsule(Layer):
         self.routings = routings
         self.share_weights = share_weights
         if activation == 'squash':
-            self.activation = squash
+            self.activation = squash # 'squash' function
         else:
             self.activation = activations.get(activation)
 
@@ -91,7 +91,7 @@ class Capsule(Layer):
                 name='capsule_kernel',
                 shape=(1, input_dim_capsule,
                        self.num_capsule * self.dim_capsule),
-                initializer='glorot_uniform',
+                initializer='glorot_uniform', # 'glorot_uniform' function
                 trainable=True)
         else:
             input_num_capsule = input_shape[-2]
@@ -142,6 +142,9 @@ class Capsule(Layer):
 
     def compute_output_shape(self, input_shape):
         return (None, self.num_capsule, self.dim_capsule)
+
+
+
 
 
 batch_size = 128
