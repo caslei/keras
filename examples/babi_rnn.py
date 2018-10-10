@@ -144,6 +144,9 @@ def vectorize_stories(data, word_idx, story_maxlen, query_maxlen):
     return (pad_sequences(xs, maxlen=story_maxlen),
             pad_sequences(xqs, maxlen=query_maxlen), np.array(ys))
 
+
+
+
 RNN = recurrent.LSTM
 EMBED_HIDDEN_SIZE = 50
 SENT_HIDDEN_SIZE = 100
@@ -216,15 +219,9 @@ merged = layers.Dropout(0.3)(merged)
 preds = layers.Dense(vocab_size, activation='softmax')(merged)
 
 model = Model([sentence, question], preds)
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 print('Training')
-model.fit([x, xq], y,
-          batch_size=BATCH_SIZE,
-          epochs=EPOCHS,
-          validation_split=0.05)
-loss, acc = model.evaluate([tx, txq], ty,
-                           batch_size=BATCH_SIZE)
+model.fit([x, xq], y, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_split=0.05)
+loss, acc = model.evaluate([tx, txq], ty, batch_size=BATCH_SIZE)
 print('Test loss / test accuracy = {:.4f} / {:.4f}'.format(loss, acc))
