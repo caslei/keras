@@ -170,26 +170,25 @@ print('Compiling...')
 input_sequence = Input((story_maxlen,))
 question = Input((query_maxlen,))
 
+#=========================================================
 # encoders
 # embed the input sequence into a sequence of vectors
 input_encoder_m = Sequential()
-input_encoder_m.add(Embedding(input_dim=vocab_size,
-                              output_dim=64))
+input_encoder_m.add(Embedding(input_dim=vocab_size, output_dim=64))
 input_encoder_m.add(Dropout(0.3))
 # output: (samples, story_maxlen, embedding_dim)
 
+#=========================================================
 # embed the input into a sequence of vectors of size query_maxlen
 input_encoder_c = Sequential()
-input_encoder_c.add(Embedding(input_dim=vocab_size,
-                              output_dim=query_maxlen))
+input_encoder_c.add(Embedding(input_dim=vocab_size, output_dim=query_maxlen))
 input_encoder_c.add(Dropout(0.3))
 # output: (samples, story_maxlen, query_maxlen)
 
+#=========================================================
 # embed the question into a sequence of vectors
 question_encoder = Sequential()
-question_encoder.add(Embedding(input_dim=vocab_size,
-                               output_dim=64,
-                               input_length=query_maxlen))
+question_encoder.add(Embedding(input_dim=vocab_size, output_dim=64, input_length=query_maxlen))
 question_encoder.add(Dropout(0.3))
 # output: (samples, query_maxlen, embedding_dim)
 
@@ -198,6 +197,8 @@ question_encoder.add(Dropout(0.3))
 input_encoded_m = input_encoder_m(input_sequence)
 input_encoded_c = input_encoder_c(input_sequence)
 question_encoded = question_encoder(question)
+
+
 
 # compute a 'match' between the first input vector sequence
 # and the question vector sequence
