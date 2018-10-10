@@ -646,3 +646,14 @@ If the layer has multiple nodes, you can use the following methods:
 (2) layer.get_output_at(node_index)
 (3) layer.get_input_shape_at(node_index)
 (4) layer.get_output_shape_at(node_index)
+
+
+
+
+#==================================================================
+#
+#               keras.engine.topology.Layer
+#
+#          Never hesitate to read the source code!
+#
+#==================================================================
