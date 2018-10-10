@@ -105,8 +105,7 @@ while len(questions) < TRAINING_SIZE:
     # Skip any addition questions we've already seen
     # Also skip any such that x+Y == Y+x (hence the sorting).
     key = tuple(sorted((a, b)))
-    if key in seen:
-        continue
+    if key in seen: continue
     seen.add(key)
     # Pad the data with spaces such that it is always MAXLEN.
     q = '{}+{}'.format(a, b)
