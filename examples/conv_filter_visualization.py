@@ -125,10 +125,11 @@ kept_filters = kept_filters[:n * n]
 # build a black picture with enough space for
 # our 8 x 8 filters of size 128 x 128, with a 5px margin in between
 margin = 5
-width = n * img_width + (n - 1) * margin
-height = n * img_height + (n - 1) * margin
+width = n * img_width + (n - 1) * margin   # 8*128+7*5
+height = n * img_height + (n - 1) * margin # 8*128+7*5 = 1024+35
 stitched_filters = np.zeros((width, height, 3))
 
+#把所有中间的滤波结果'按照N*N的方式'存放到一幅图像上
 # fill the picture with our saved filters
 for i in range(n):
     for j in range(n):
