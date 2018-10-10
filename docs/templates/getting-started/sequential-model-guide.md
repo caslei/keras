@@ -291,12 +291,13 @@ model = Sequential()
 model.add(Conv1D(64, 3, activation='relu', input_shape=(seq_length, 100)))
 model.add(Conv1D(64, 3, activation='relu'))
 model.add(MaxPooling1D(3))
+
 model.add(Conv1D(128, 3, activation='relu'))
 model.add(Conv1D(128, 3, activation='relu'))
 model.add(GlobalAveragePooling1D())
+
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='sigmoid'))
-
 model.compile(loss='binary_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
@@ -329,8 +330,8 @@ num_classes = 10
 model = Sequential()
 model.add(LSTM(32, return_sequences=True,
                input_shape=(timesteps, data_dim)))  # returns a sequence of vectors of dimension 32
-model.add(LSTM(32, return_sequences=True))  # returns a sequence of vectors of dimension 32
-model.add(LSTM(32))  # return a single vector of dimension 32
+model.add(LSTM(32, return_sequences=True))          # returns a sequence of vectors of dimension 32
+model.add(LSTM(32))                                 # return a single vector of dimension 32
 model.add(Dense(10, activation='softmax'))
 
 model.compile(loss='categorical_crossentropy',
@@ -347,7 +348,7 @@ y_val = np.random.random((100, num_classes))
 
 model.fit(x_train, y_train,
           batch_size=64, epochs=5,
-          validation_data=(x_val, y_val))
+          validation_data=(x_val, y_val)) # validation_data = (x_val, y_val)
 ```
 
 
@@ -382,6 +383,8 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
+
+###### 'model.compile()' is very different from 'model.fit()' ##############
 
 # Generate dummy training data
 x_train = np.random.random((batch_size * 10, timesteps, data_dim))
