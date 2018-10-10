@@ -45,7 +45,7 @@ class CharacterTable(object):
         # Arguments
             chars: Characters that can appear in the input.
         """
-        self.chars = sorted(set(chars))
+        self.chars = sorted(set(chars)) # 'set' function
         self.char_indices = dict((c, i) for i, c in enumerate(self.chars))
         self.indices_char = dict((i, c) for i, c in enumerate(self.chars))
 
@@ -174,7 +174,7 @@ for _ in range(LAYERS):
     # the first dimension to be the timesteps.
     model.add(RNN(HIDDEN_SIZE, return_sequences=True))
 
-# Apply a dense layer to the every temporal slice of an input. For each of step
+# Apply a dense layer to the 'every temporal slice' of an input. For each of step
 # of the output sequence, decide which character should be chosen.
 model.add(layers.TimeDistributed(layers.Dense(len(chars), activation='softmax')))
 model.compile(loss='categorical_crossentropy',
@@ -188,10 +188,14 @@ for iteration in range(1, 200):
     print()
     print('-' * 50)
     print('Iteration', iteration)
+
+    # 模型参数在不同fit()之间自动传递和更新
     model.fit(x_train, y_train,
               batch_size=BATCH_SIZE,
               epochs=1,
-              validation_data=(x_val, y_val))
+              validation_data=(x_val, y_val), # together!!!
+              )
+
     # Select 10 samples from the validation set at random so we can visualize
     # errors.
     for i in range(10):
