@@ -69,8 +69,8 @@ model_type = 'ResNet%dv%d' % (depth, version)
 input_shape = x_train.shape[1:]
 
 # Normalize data.
-x_train = x_train.astype('float32') / 255
-x_test = x_test.astype('float32') / 255
+x_train = x_train.astype('float32') / 255.
+x_test = x_test.astype('float32') / 255.
 
 # If subtract pixel mean is enabled
 if subtract_pixel_mean:
@@ -139,8 +139,8 @@ def resnet_layer(inputs,
                   kernel_size=kernel_size,
                   strides=strides,
                   padding='same',
-                  kernel_initializer='he_normal',
-                  kernel_regularizer=l2(1e-4))
+                  kernel_initializer='he_normal', #=========================
+                  kernel_regularizer=l2(1e-4))    #=========================
 
     x = inputs
     if conv_first:
@@ -328,6 +328,10 @@ def resnet_v2(input_shape, depth, num_classes=10):
     return model
 
 
+
+
+
+
 if version == 2:
     model = resnet_v2(input_shape=input_shape, depth=depth)
 else:
@@ -348,13 +352,13 @@ filepath = os.path.join(save_dir, model_name)
 
 # Prepare callbacks for model saving and for learning rate adjustment.
 checkpoint = ModelCheckpoint(filepath=filepath,
-                             monitor='val_acc',
+                             monitor='val_acc',     #================
                              verbose=1,
-                             save_best_only=True)
+                             save_best_only=True)   #================
 
 lr_scheduler = LearningRateScheduler(lr_schedule)
 
-lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
+lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1), #================
                                cooldown=0,
                                patience=5,
                                min_lr=0.5e-6)
