@@ -107,7 +107,7 @@ noisy_movies, shifted_movies = generate_movies(n_samples=1200)
 # noisy_movies: training data
 # shifted_movies: label of training data
 seq.fit(noisy_movies[:1000], shifted_movies[:1000], batch_size=10,
-        epochs=300, validation_split=0.05) #
+        epochs=10, validation_split=0.05) #
 
 # Testing the network on one movie
 # feed it with the first 7 positions and then
