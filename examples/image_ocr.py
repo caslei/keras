@@ -42,16 +42,17 @@ import editdistance
 import numpy as np
 from scipy import ndimage
 import pylab
+
 from keras import backend as K
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.layers import Input, Dense, Activation
-from keras.layers import Reshape, Lambda
+from keras.layers import Reshape, Lambda # widely used!!!
 from keras.layers.merge import add, concatenate
 from keras.models import Model
 from keras.layers.recurrent import GRU
 from keras.optimizers import SGD
 from keras.utils.data_utils import get_file
-from keras.preprocessing import image
+from keras.preprocessing import image # widely used!!!
 import keras.callbacks
 
 
@@ -70,8 +71,11 @@ np.random.seed(55)
 
 def speckle(img):
     severity = np.random.uniform(0, 0.6)
+    # note that: ==> '* severity'
     blur = ndimage.gaussian_filter(np.random.randn(*img.shape) * severity, 1)
     img_speck = (img + blur)
+    # the following statements are very important!!!
+    # transformed image must have the same intensity range of [0,1]
     img_speck[img_speck > 1] = 1
     img_speck[img_speck <= 0] = 0
     return img_speck
