@@ -11,14 +11,15 @@ python deep_dream.py img/mypic.jpg results/dream
 '''
 from __future__ import print_function
 
-from keras.preprocessing.image import load_img, save_img, img_to_array
 import numpy as np
 import scipy
-import argparse
+import argparse  # parse argument
 
+from keras.preprocessing.image import load_img, save_img, img_to_array
 from keras.applications import inception_v3
 from keras import backend as K
 
+#------------------------------------------------------------
 parser = argparse.ArgumentParser(description='Deep Dreams with Keras.')
 parser.add_argument('base_image_path', metavar='base', type=str,
                     help='Path to the image to transform.')
@@ -28,6 +29,8 @@ parser.add_argument('result_prefix', metavar='res_prefix', type=str,
 args = parser.parse_args()
 base_image_path = args.base_image_path
 result_prefix = args.result_prefix
+#------------------------------------------------------------
+
 
 # These are the names of the layers
 # for which we try to maximize activation,
@@ -50,15 +53,16 @@ def preprocess_image(image_path):
     img = load_img(image_path)
     img = img_to_array(img)
     img = np.expand_dims(img, axis=0)
-    img = inception_v3.preprocess_input(img)
+    # from 'keras_applications.imagenet_utils.py'
+    img = inception_v3.preprocess_input(img) 
     return img
 
 
-def deprocess_image(x):
+def deprocess_image(x): # 'x' is of numpy.ndarray object
     # Util function to convert a tensor into a valid image.
     if K.image_data_format() == 'channels_first':
         x = x.reshape((3, x.shape[2], x.shape[3]))
-        x = x.transpose((1, 2, 0))
+        x = x.transpose((1, 2, 0)) # 'channels_last'
     else:
         x = x.reshape((x.shape[1], x.shape[2], 3))
     x /= 2.
@@ -67,42 +71,54 @@ def deprocess_image(x):
     x = np.clip(x, 0, 255).astype('uint8')
     return x
 
+
+#------------------------------------------------------------
 K.set_learning_phase(0)
+#------------------------------------------------------------
+
+
 
 # Build the InceptionV3 network with our placeholder.
 # The model will be loaded with pre-trained ImageNet weights.
-model = inception_v3.InceptionV3(weights='imagenet',
-                                 include_top=False)
+model = inception_v3.InceptionV3(weights='imagenet', include_top=False)
 dream = model.input
 print('Model loaded.')
 
 # Get the symbolic outputs of each "key" layer (we gave them unique names).
 layer_dict = dict([(layer.name, layer) for layer in model.layers])
+# a=[(1,2),(2,3),(4,5)]
+# b=dict(a) ==> {1: 2, 2: 3, 4: 5}
+#------------------------------------------------------------
 
 # Define the loss.
 loss = K.variable(0.)
 for layer_name in settings['features']:
     # Add the L2 norm of the features of a layer to the loss.
-    assert (layer_name in layer_dict.keys(),
-            'Layer ' + layer_name + ' not found in model.')
+    assert layer_name in layer_dict.keys(), 'Layer '+layer_name+' not found in model.'
+    
     coeff = settings['features'][layer_name]
     x = layer_dict[layer_name].output
+
     # We avoid border artifacts by only involving non-border pixels in the loss.
     scaling = K.prod(K.cast(K.shape(x), 'float32'))
     if K.image_data_format() == 'channels_first':
-        loss += coeff * K.sum(K.square(x[:, :, 2: -2, 2: -2])) / scaling
+        loss += coeff * K.sum(K.square(x[:, :, 2:-2, 2:-2])) / scaling
     else:
-        loss += coeff * K.sum(K.square(x[:, 2: -2, 2: -2, :])) / scaling
+        loss += coeff * K.sum(K.square(x[:, 2:-2, 2:-2, :])) / scaling
 
 # Compute the gradients of the dream wrt the loss.
 grads = K.gradients(loss, dream)[0]
 # Normalize gradients.
-grads /= K.maximum(K.mean(K.abs(grads)), K.epsilon())
-
+grads /= K.maximum(K.mean(K.abs(grads)), K.epsilon()) # ???
+#------------------------------------------------------------
+ 
 # Set up function to retrieve the value
 # of the loss and gradients given an input image.
 outputs = [loss, grads]
 fetch_loss_and_grads = K.function([dream], outputs)
+#------------------------------------------------------------
+# outputs = fetch_loss_and_grads([dream])
+#------------------------------------------------------------
 
 
 def eval_loss_and_grads(x):
@@ -113,7 +129,7 @@ def eval_loss_and_grads(x):
 
 
 def resize_img(img, size):
-    img = np.copy(img)
+    img = np.copy(img) # copy
     if K.image_data_format() == 'channels_first':
         factors = (1, 1,
                    float(size[0]) / img.shape[2],
@@ -165,8 +181,8 @@ img = preprocess_image(base_image_path)
 if K.image_data_format() == 'channels_first':
     original_shape = img.shape[2:]
 else:
-    original_shape = img.shape[1:3]
-successive_shapes = [original_shape]
+    original_shape = img.shape[1:3] # [w,h]
+successive_shapes = [original_shape] # [[w,h]]
 for i in range(1, num_octave):
     shape = tuple([int(dim / (octave_scale ** i)) for dim in original_shape])
     successive_shapes.append(shape)
@@ -177,11 +193,12 @@ shrunk_original_img = resize_img(img, successive_shapes[0])
 for shape in successive_shapes:
     print('Processing image shape', shape)
     img = resize_img(img, shape)
-    img = gradient_ascent(img,
-                          iterations=iterations,
-                          step=step,
-                          max_loss=max_loss)
+    img = gradient_ascent(img, iterations=iterations,
+                          step=step, max_loss=max_loss)
+
+    # change image size from the second time
     upscaled_shrunk_original_img = resize_img(shrunk_original_img, shape)
+
     same_size_original = resize_img(original_img, shape)
     lost_detail = same_size_original - upscaled_shrunk_original_img
 
@@ -189,3 +206,4 @@ for shape in successive_shapes:
     shrunk_original_img = resize_img(original_img, shape)
 
 save_img(result_prefix + '.png', deprocess_image(np.copy(img)))
+
