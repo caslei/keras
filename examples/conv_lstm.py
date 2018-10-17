@@ -36,6 +36,7 @@ seq.add(BatchNormalization())
 seq.add(Conv3D(filters=1, kernel_size=(3, 3, 3),
                activation='sigmoid',
                padding='same', data_format='channels_last'))
+
 seq.compile(loss='binary_crossentropy', optimizer='adadelta')
 
 
@@ -49,13 +50,13 @@ seq.compile(loss='binary_crossentropy', optimizer='adadelta')
 def generate_movies(n_samples=1200, n_frames=15):
     row = 80
     col = 80
+    # 5-dimensional data (sample, frame, row, column, channel)
     noisy_movies = np.zeros((n_samples, n_frames, row, col, 1), dtype=np.float)
-    shifted_movies = np.zeros((n_samples, n_frames, row, col, 1),
-                              dtype=np.float)
+    shifted_movies = np.zeros((n_samples, n_frames, row, col, 1), dtype=np.float)
 
     for i in range(n_samples):
         # Add 3 to 7 moving squares
-        n = np.random.randint(3, 8)
+        n = np.random.randint(3, 8) # return only scalar value
 
         for j in range(n):
             # Initial position
@@ -67,12 +68,10 @@ def generate_movies(n_samples=1200, n_frames=15):
 
             # Size of the square
             w = np.random.randint(2, 4)
-
             for t in range(n_frames):
                 x_shift = xstart + directionx * t
                 y_shift = ystart + directiony * t
-                noisy_movies[i, t, x_shift - w: x_shift + w,
-                             y_shift - w: y_shift + w, 0] += 1
+                noisy_movies[i, t, x_shift-w: x_shift+w, y_shift-w: y_shift+w, 0] += 1
 
                 # Make it more robust by adding noise.
                 # The idea is that if during inference,
@@ -81,16 +80,12 @@ def generate_movies(n_samples=1200, n_frames=15):
                 # consider it as a pixel belonging to a square.
                 if np.random.randint(0, 2):
                     noise_f = (-1)**np.random.randint(0, 2) # random [negative, positive]
-                    noisy_movies[i, t,
-                                 x_shift - w - 1: x_shift + w + 1,
-                                 y_shift - w - 1: y_shift + w + 1,
-                                 0] += noise_f * 0.1
+                    noisy_movies[i, t, x_shift-w-1: x_shift+w+1, y_shift-w-1: y_shift+w+1, 0] += noise_f*0.1
 
                 # Shift the ground truth by 1
                 x_shift = xstart + directionx * (t + 1)
                 y_shift = ystart + directiony * (t + 1)
-                shifted_movies[i, t, x_shift - w: x_shift + w,
-                               y_shift - w: y_shift + w, 0] += 1
+                shifted_movies[i, t, x_shift-w: x_shift+w, y_shift-w: y_shift+w, 0] += 1
 
     # Cut to a 40x40 window
     noisy_movies = noisy_movies[::, ::, 20:60, 20:60, ::]
@@ -110,8 +105,7 @@ seq.fit(noisy_movies[:1000], shifted_movies[:1000], batch_size=10,
         epochs=10, validation_split=0.05) #
 
 # Testing the network on one movie
-# feed it with the first 7 positions and then
-# predict the new positions
+# feed it with the first 7 positions and then predict the new positions
 which = 1004
 track = noisy_movies[which][:7, ::, ::, ::] # 'which' define the slice along axis=0
 
@@ -128,15 +122,15 @@ for i in range(15):
     fig = plt.figure(figsize=(10, 5))
 
     ax = fig.add_subplot(121)
-
     if i >= 7:
         ax.text(1, 3, 'Predictions !', fontsize=20, color='w')
     else:
         ax.text(1, 3, 'Initial trajectory', fontsize=20)
 
     toplot = track[i, ::, ::, 0]
-
     plt.imshow(toplot)
+
+
     ax = fig.add_subplot(122)
     plt.text(1, 3, 'Ground truth', fontsize=20)
 
