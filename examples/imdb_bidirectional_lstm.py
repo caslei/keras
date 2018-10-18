@@ -9,7 +9,8 @@ import numpy as np
 
 from keras.preprocessing import sequence
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
+from keras.layers import Dense, Dropout
+from keras.layers import Embedding, LSTM, Bidirectional # widely used for RNN
 from keras.datasets import imdb
 
 
