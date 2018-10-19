@@ -59,7 +59,7 @@ import keras.callbacks
 OUTPUT_DIR = 'image_ocr'
 
 # character classes and matching regex filter
-regex = r'^[a-z ]+$'
+regex = r'^[a-z ]+$' # regular express
 alphabet = u'abcdefghijklmnopqrstuvwxyz '
 
 np.random.seed(55)
