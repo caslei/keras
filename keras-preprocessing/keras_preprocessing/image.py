@@ -1872,11 +1872,11 @@ class DirectoryIterator(Iterator):
 
         if not classes:
             classes = []
-            for subdir in sorted(os.listdir(directory)):
+            for subdir in sorted(os.listdir(directory)):               # directory ==> images
                 if os.path.isdir(os.path.join(directory, subdir)):
                     classes.append(subdir)
         self.num_classes = len(classes)
-        self.class_indices = dict(zip(classes, range(len(classes))))
+        self.class_indices = dict(zip(classes, range(len(classes))))   # directory ==> images
 
         pool = multiprocessing.pool.ThreadPool()
 
