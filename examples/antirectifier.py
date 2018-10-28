@@ -1,6 +1,6 @@
 '''The example demonstrates how to write custom layers for Keras.
 
-We build a custom activation layer called 'Antirectifier',
+We build a custom activation layer called 'Anti-rectifier',
 which modifies the shape of the tensor that passes through it.
 We need to specify two methods: `compute_output_shape` and `call`.
 
@@ -17,7 +17,8 @@ from keras import layers
 from keras.datasets import mnist
 from keras import backend as K
 
-
+# based on the class of 'layers.Layer'
+# only implement two functions !!!!!!!!!!!!!!!!!!!
 class Antirectifier(layers.Layer):
     '''This is the combination of a sample-wise
     L2 normalization with the concatenation of the
@@ -47,7 +48,7 @@ class Antirectifier(layers.Layer):
     '''
 
     def compute_output_shape(self, input_shape):
-        shape = list(input_shape)
+        shape = list(input_shape) # tensor --> list
         assert len(shape) == 2  # only valid for 2D tensors
         shape[-1] *= 2
         return tuple(shape)
