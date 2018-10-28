@@ -479,6 +479,7 @@ def train(run_name, start_epoch, stop_epoch, img_w):
                  origin='http://www.mythic-ai.com/datasets/wordlists.tgz',
                  untar=True))
 
+    # call class 'TextImageGenerator'
     img_gen = TextImageGenerator(
         monogram_file=os.path.join(fdir, 'wordlist_mono_clean.txt'),
         bigram_file=os.path.join(fdir, 'wordlist_bi_clean.txt'),
@@ -487,12 +488,15 @@ def train(run_name, start_epoch, stop_epoch, img_w):
         img_h=img_h,
         downsample_factor=(pool_size ** 2),
         val_split=words_per_epoch - val_words)
+
     act = 'relu'
     input_data = Input(name='the_input', shape=input_shape, dtype='float32')
     inner = Conv2D(conv_filters, kernel_size, padding='same',
-                   activation=act, kernel_initializer='he_normal',
+                   # Is it ('he_normal') very important???
+                   activation=act, kernel_initializer='he_normal', 
                    name='conv1')(input_data)
     inner = MaxPooling2D(pool_size=(pool_size, pool_size), name='max1')(inner)
+    
     inner = Conv2D(conv_filters, kernel_size, padding='same',
                    activation=act, kernel_initializer='he_normal',
                    name='conv2')(inner)
@@ -500,7 +504,10 @@ def train(run_name, start_epoch, stop_epoch, img_w):
 
     conv_to_rnn_dims = (img_w // (pool_size ** 2),
                         (img_h // (pool_size ** 2)) * conv_filters)
+
+    #======================================================================
     inner = Reshape(target_shape=conv_to_rnn_dims, name='reshape')(inner)
+    #======================================================================
 
     # cuts down input size going into RNN:
     inner = Dense(time_dense_size, activation=act, name='dense1')(inner)
@@ -513,6 +520,8 @@ def train(run_name, start_epoch, stop_epoch, img_w):
                  go_backwards=True, kernel_initializer='he_normal',
                  name='gru1_b')(inner)
     gru1_merged = add([gru_1, gru_1b])
+    
+    # gru1_merged --> <gru_2, gru_2b>
     gru_2 = GRU(rnn_size, return_sequences=True,
                 kernel_initializer='he_normal', name='gru2')(gru1_merged)
     gru_2b = GRU(rnn_size, return_sequences=True, go_backwards=True,
@@ -522,31 +531,39 @@ def train(run_name, start_epoch, stop_epoch, img_w):
     inner = Dense(img_gen.get_output_size(), kernel_initializer='he_normal',
                   name='dense2')(concatenate([gru_2, gru_2b]))
     y_pred = Activation('softmax', name='softmax')(inner)
+
+    #======================================================================
+    # just display the basic RNN structure 
     Model(inputs=input_data, outputs=y_pred).summary()
+    #======================================================================
 
     labels = Input(name='the_labels',
                    shape=[img_gen.absolute_max_string_len], dtype='float32')
     input_length = Input(name='input_length', shape=[1], dtype='int64')
     label_length = Input(name='label_length', shape=[1], dtype='int64')
+
     # Keras doesn't currently support loss funcs with extra parameters
-    # so CTC loss is implemented in a lambda layer
+    # so CTC loss is implemented in a 'lambda' layer
     loss_out = Lambda(
         ctc_lambda_func, output_shape=(1,),
         name='ctc')([y_pred, labels, input_length, label_length])
 
-    # clipnorm seems to speeds up convergence
-    sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
-
+    #======================================================================
     model = Model(inputs=[input_data, labels, input_length, label_length],
                   outputs=loss_out)
+    #======================================================================
+
+    # 'clipnorm' seems to speeds up convergence ===========================
+    sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 
     # the loss calc occurs elsewhere, so use a dummy lambda func for the loss
     model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
+
     if start_epoch > 0:
-        weight_file = os.path.join(
-            OUTPUT_DIR,
+        weight_file = os.path.join( OUTPUT_DIR,
             os.path.join(run_name, 'weights%02d.h5' % (start_epoch - 1)))
         model.load_weights(weight_file)
+
     # captures output of softmax so we can decode the output during visualization
     test_func = K.function([input_data], [y_pred])
 
@@ -558,13 +575,15 @@ def train(run_name, start_epoch, stop_epoch, img_w):
         epochs=stop_epoch,
         validation_data=img_gen.next_val(),
         validation_steps=val_words // minibatch_size,
-        callbacks=[viz_cb, img_gen],
+        callbacks=[viz_cb, img_gen], # =================
         initial_epoch=start_epoch)
 
 
 if __name__ == '__main__':
     run_name = datetime.datetime.now().strftime('%Y:%m:%d:%H:%M:%S')
+    
     train(run_name, 0, 20, 128)
     # increase to wider images and start at epoch 20.
     # The learned weights are reloaded
     train(run_name, 20, 25, 512)
+
