@@ -62,7 +62,7 @@ OUTPUT_DIR = 'image_ocr'
 regex = r'^[a-z ]+$' # regular express
 alphabet = u'abcdefghijklmnopqrstuvwxyz '
 
-np.random.seed(55)
+np.random.seed(55) # random seed for re-start
 
 
 # this creates larger "blotches" of noise which look
@@ -71,7 +71,7 @@ np.random.seed(55)
 
 def speckle(img):
     severity = np.random.uniform(0, 0.6)
-    # note that: ==> '* severity'
+    # note that: ==> '* severity',           *img.shape=*(a,b) = a, b
     blur = ndimage.gaussian_filter(np.random.randn(*img.shape) * severity, 1)
     img_speck = (img + blur)
     # the following statements are very important!!!
@@ -87,6 +87,7 @@ def speckle(img):
 
 def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+    # 'with... as ...' structure 
     with cairo.Context(surface) as context:
         context.set_source_rgb(1, 1, 1)  # White
         context.paint()
