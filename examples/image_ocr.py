@@ -258,6 +258,7 @@ class TextImageGenerator(keras.callbacks.Callback):
             raise IOError('Could not pull enough words'
                           'from supplied monogram and bigram files.')
         # interlace to mix up the easy and hard words
+        # from 'tmp_string_list' to 'self.string_list'
         self.string_list[::2] = tmp_string_list[:self.num_words // 2]
         self.string_list[1::2] = tmp_string_list[self.num_words // 2:]
 
@@ -307,6 +308,8 @@ class TextImageGenerator(keras.callbacks.Callback):
                 input_length[i] = self.img_w // self.downsample_factor - 2
                 label_length[i] = self.Y_len[index + i]
                 source_str.append(self.X_text[index + i])
+
+        # multiple inputs for RNN model
         inputs = {'the_input': X_data,
                   'the_labels': labels,
                   'input_length': input_length,
@@ -318,6 +321,7 @@ class TextImageGenerator(keras.callbacks.Callback):
 
     def next_train(self):
         while 1:
+            # self.get_batch() <-- def get_batch()
             ret = self.get_batch(self.cur_train_index,
                                  self.minibatch_size, train=True)
             self.cur_train_index += self.minibatch_size
