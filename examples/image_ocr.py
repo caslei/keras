@@ -87,17 +87,16 @@ def speckle(img):
 
 def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
-    # 'with... as ...' structure 
+    # 'with... as ... : ' structure 
     with cairo.Context(surface) as context:
         context.set_source_rgb(1, 1, 1)  # White
         context.paint()
         # this font list works in CentOS 7
         if multi_fonts:
-            fonts = [
-                'Century Schoolbook', 'Courier', 'STIX',
-                'URW Chancery L', 'FreeMono']
+            fonts = [ 'Century Schoolbook', 'Courier', 'STIX', 
+                      'URW Chancery L', 'FreeMono']
             context.select_font_face(
-                np.random.choice(fonts),
+                np.random.choice(fonts), # np.random.choice(list)
                 cairo.FONT_SLANT_NORMAL,
                 np.random.choice([cairo.FONT_WEIGHT_BOLD, cairo.FONT_WEIGHT_NORMAL]))
         else:
@@ -108,6 +107,7 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
         box = context.text_extents(text)
         border_w_h = (4, 4)
         if box[2] > (w - 2 * border_w_h[1]) or box[3] > (h - 2 * border_w_h[0]):
+            # 'raise IOError()'
             raise IOError(('Could not fit string into image.'
                            'Max char count is too large for given image width.'))
 
