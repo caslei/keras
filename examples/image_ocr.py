@@ -115,7 +115,7 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
         # fitting text box randomly on canvas, with some room to rotate
         max_shift_x = w - box[2] - border_w_h[0]
         max_shift_y = h - box[3] - border_w_h[1]
-        top_left_x = np.random.randint(0, int(max_shift_x))
+        top_left_x = np.random.randint(0, int(max_shift_x)) # get one int value
         if ud:
             top_left_y = np.random.randint(0, int(max_shift_y))
         else:
@@ -125,15 +125,14 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
         context.show_text(text)
 
     buf = surface.get_data()
-    a = np.frombuffer(buf, np.uint8)
+    a = np.frombuffer(buf, np.uint8) #  'np.frombuffer()'
     a.shape = (h, w, 4)
     a = a[:, :, 0]  # grab single channel
     a = a.astype(np.float32) / 255
-    a = np.expand_dims(a, 0)
-    if rotate:
-        a = image.random_rotation(a, 3 * (w - top_left_x) / w + 1)
-    a = speckle(a)
+    a = np.expand_dims(a, 0)   # 'np.expand_dims()'
+    if rotate: a = image.random_rotation(a, 3 * (w - top_left_x) / w + 1)
 
+    a = speckle(a) # call pre-defined 'sepeckle()' function
     return a
 
 
@@ -141,11 +140,11 @@ def shuffle_mats_or_lists(matrix_list, stop_ind=None):
     ret = []
     assert all([len(i) == len(matrix_list[0]) for i in matrix_list])
     len_val = len(matrix_list[0])
-    if stop_ind is None:
+    if stop_ind is None: # 'is None'
         stop_ind = len_val
     assert stop_ind <= len_val
 
-    a = list(range(stop_ind))
+    a = list(range(stop_ind)) # cast 'range' to 'list'
     np.random.shuffle(a)
     a += list(range(stop_ind, len_val))
     for mat in matrix_list:
@@ -154,6 +153,7 @@ def shuffle_mats_or_lists(matrix_list, stop_ind=None):
         elif isinstance(mat, list):
             ret.append([mat[i] for i in a])
         else:
+            # 'raise TypeError / IOError / Exception'
             raise TypeError('`shuffle_mats_or_lists` only supports '
                             'numpy.array and list objects.')
     return ret
@@ -186,16 +186,21 @@ def is_valid_str(in_str):
     return bool(search(in_str))
 
 
+#=======================================================
+#=======================================================
+
 # Uses generator functions to supply train/test with
 # data. Image renderings are text are created on the fly
 # each time with random perturbations
 
+# base class -> 'keras.callbacks.Callback'
 class TextImageGenerator(keras.callbacks.Callback):
 
     def __init__(self, monogram_file, bigram_file, minibatch_size,
                  img_w, img_h, downsample_factor, val_split,
                  absolute_max_string_len=16):
 
+        # data members of class 'TextImageGenerator'
         self.minibatch_size = minibatch_size
         self.img_w = img_w
         self.img_h = img_h
@@ -207,7 +212,7 @@ class TextImageGenerator(keras.callbacks.Callback):
         self.absolute_max_string_len = absolute_max_string_len
 
     def get_output_size(self):
-        return len(alphabet) + 1
+        return len(alphabet) + 1 # where is 'alphabet' from???
 
     # num_words can be independent of the epoch size due to the use of generators
     # as max_string_len grows, num_words can grow
@@ -215,14 +220,16 @@ class TextImageGenerator(keras.callbacks.Callback):
         assert max_string_len <= self.absolute_max_string_len
         assert num_words % self.minibatch_size == 0
         assert (self.val_split * num_words) % self.minibatch_size == 0
-        self.num_words = num_words
-        self.string_list = [''] * self.num_words
+
+        self.num_words = num_words               # [''*3]==['']
+        self.string_list = [''] * self.num_words # ['']*3==['','','']
         tmp_string_list = []
         self.max_string_len = max_string_len
         self.Y_data = np.ones([self.num_words, self.absolute_max_string_len]) * -1
         self.X_text = []
         self.Y_len = [0] * self.num_words
 
+        # define a function in a function !!!
         def _is_length_of_word_valid(word):
             return (max_string_len == -1 or
                     max_string_len is None or
@@ -233,13 +240,13 @@ class TextImageGenerator(keras.callbacks.Callback):
             for line in f:
                 if len(tmp_string_list) == int(self.num_words * mono_fraction):
                     break
-                word = line.rstrip()
+                word = line.rstrip() # remove '\n' in the end of a line
                 if _is_length_of_word_valid(word):
                     tmp_string_list.append(word)
 
         # bigram file contains common word pairings in english speech
         with codecs.open(self.bigram_file, mode='r', encoding='utf-8') as f:
-            lines = f.readlines()
+            lines = f.readlines() # read all of lines
             for line in lines:
                 if len(tmp_string_list) == self.num_words:
                     break
