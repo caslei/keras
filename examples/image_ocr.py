@@ -8,7 +8,7 @@ inside of Keras.  Note that the font list may need to be updated
 for the particular OS in use.
 
 This starts off with 4 letter words.  For the first 12 epochs, the
-difficulty is gradually increased using the TextImageGenerator class
+difficulty is gradually increased using the 'TextImageGenerator' class
 which is both a generator class for test/train data and a Keras
 callback class. After 20 epochs, longer sequences are thrown at it
 by recompiling the model to handle a wider image and rebuilding
