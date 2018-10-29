@@ -163,7 +163,7 @@ class Layer(object):
         else:
             self._initial_weights = None
 
-    @staticmethod # ==> 类的静态方法,即不用实例化类，就可以调用的函数
+    @staticmethod # ==> 类的静态方法,即不用实例化就可以调用的函数
     def _node_key(layer, node_index):
         """Converts a layer and its index to a unique (immutable type) name.
 
