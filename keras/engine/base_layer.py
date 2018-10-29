@@ -18,7 +18,7 @@ from ..utils.generic_utils import unpack_singleton
 from ..utils.generic_utils import is_all_none
 from ..legacy import interfaces
 
-
+# 'object' is the public base class
 class Layer(object):
     """Abstract base layer class.
 
@@ -114,7 +114,10 @@ class Layer(object):
         # note that 'dtype', 'input_shape' and 'batch_input_shape'
         # are only applicable to input layers: do not pass these keywords
         # to non-input layers.
-        allowed_kwargs = {'input_shape',
+
+        # type(allowed_kwargs) => class 'set'
+        # 如果allowed_kwargs中存在冒号，则其类型为 'dict'
+        allowed_kwargs = {'input_shape', 
                           'batch_input_shape',
                           'batch_size',
                           'dtype',
