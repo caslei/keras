@@ -126,12 +126,12 @@ class Layer(object):
                           'weights',
                           'input_dtype',  # legacy
                           }
-        for kwarg in kwargs:
+        for kwarg in kwargs: # kwargs is the type of 'dict'
             if kwarg not in allowed_kwargs:
                 raise TypeError('Keyword argument not understood:', kwarg)
         name = kwargs.get('name')
         if not name:
-            prefix = self.__class__.__name__
+            prefix = self.__class__.__name__ # '__' denotes certain property
             name = _to_snake_case(prefix) + '_' + str(K.get_uid(prefix))
         self.name = name
 
@@ -146,8 +146,7 @@ class Layer(object):
                     batch_size = kwargs['batch_size']
                 else:
                     batch_size = None
-                batch_input_shape = (
-                    batch_size,) + tuple(kwargs['input_shape'])
+                batch_input_shape = (batch_size,) + tuple(kwargs['input_shape'])
             self.batch_input_shape = batch_input_shape
 
             # Set dtype.
@@ -155,7 +154,7 @@ class Layer(object):
             if dtype is None:
                 dtype = kwargs.get('input_dtype')
             if dtype is None:
-                dtype = K.floatx()
+                dtype = K.floatx() # cast to 'float'
             self.dtype = dtype
 
         if 'weights' in kwargs:
@@ -163,7 +162,7 @@ class Layer(object):
         else:
             self._initial_weights = None
 
-    @staticmethod
+    @staticmethod # ==> 类的静态方法,即不用实例化类，就可以调用的函数
     def _node_key(layer, node_index):
         """Converts a layer and its index to a unique (immutable type) name.
 
