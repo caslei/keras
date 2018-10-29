@@ -32,7 +32,7 @@ epochs = 2
 
 '''
 Note:
-batch_size is highly sensitive.
+'batch_size' is highly sensitive. why ????
 Only 2 epochs are needed as the dataset is very small.
 '''
 
@@ -71,6 +71,8 @@ model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           validation_data=(x_test, y_test))
+
+# model.evaluate()
 score, acc = model.evaluate(x_test, y_test, batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
