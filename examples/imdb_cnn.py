@@ -39,9 +39,7 @@ model = Sequential()
 
 # we start off with an efficient embedding layer which maps
 # our vocab indices into embedding_dims dimensions
-model.add(Embedding(max_features,
-                    embedding_dims,
-                    input_length=maxlen))
+model.add(Embedding(max_features, embedding_dims, input_length=maxlen))
 model.add(Dropout(0.2))
 
 # we add a Convolution1D, which will learn filters
@@ -66,7 +64,8 @@ model.add(Activation('sigmoid'))
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
-model.fit(x_train, y_train,
+
+model.fit(x_train, y_train, # not is (x_train, y_train)!!!
           batch_size=batch_size,
           epochs=epochs,
           validation_data=(x_test, y_test))
