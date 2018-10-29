@@ -16,7 +16,7 @@ import numpy as np
 from keras.preprocessing import sequence
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.layers import Embedding
+from keras.layers import Embedding # 'Embedding' ???
 from keras.layers import GlobalAveragePooling1D
 from keras.datasets import imdb
 
@@ -62,6 +62,8 @@ def add_ngram(sequences, token_indice, ngram_range=2):
 
     return new_sequences
 
+
+
 # Set parameters:
 # ngram_range = 2 will add bi-grams features
 ngram_range = 1
@@ -75,6 +77,8 @@ print('Loading data...')
 (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
+
+# '{}'.format() <==> '{:%d}'.format() ???
 print('Average train sequence length: {}'.format(
     np.mean(list(map(len, x_train)), dtype=int)))
 print('Average test sequence length: {}'.format(
