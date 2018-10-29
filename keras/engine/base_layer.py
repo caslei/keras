@@ -146,7 +146,8 @@ class Layer(object):
                     batch_size = kwargs['batch_size']
                 else:
                     batch_size = None
-                batch_input_shape = (batch_size,) + tuple(kwargs['input_shape'])
+                batch_input_shape = (batch_size,) + 
+                                    tuple(kwargs['input_shape'])
             self.batch_input_shape = batch_input_shape
 
             # Set dtype.
@@ -178,7 +179,7 @@ class Layer(object):
         """
         return layer.name + '_ib-' + str(node_index)
 
-    @property
+    @property # ==> 将函数转化为同名的类属性, 即Layer.losses() => Layer.lossse
     def losses(self):
         return self._losses
 
