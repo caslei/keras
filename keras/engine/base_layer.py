@@ -197,6 +197,7 @@ class Layer(object):
     def built(self, value):
         self._built = value
 # @property -> built -> @built.setter
+# the same function name of 'built'   !!!
 #====================================
     @property
     def trainable_weights(self):
@@ -210,6 +211,7 @@ class Layer(object):
     def trainable_weights(self, weights):
         self._trainable_weights = weights
 
+#====================================
     @property
     def non_trainable_weights(self):
         trainable = getattr(self, 'trainable', True)
@@ -221,7 +223,7 @@ class Layer(object):
     @non_trainable_weights.setter
     def non_trainable_weights(self, weights):
         self._non_trainable_weights = weights
-
+#=========================================
     @interfaces.legacy_add_weight_support
     def add_weight(self,
                    name,
@@ -248,8 +250,8 @@ class Layer(object):
             The created weight variable.
         """
         initializer = initializers.get(initializer)
-        if dtype is None:
-            dtype = K.floatx()
+        if dtype is None: dtype = K.floatx()
+        # define a tensor variable
         weight = K.variable(initializer(shape),
                             dtype=dtype,
                             name=name,
@@ -277,11 +279,12 @@ class Layer(object):
             ValueError: in case of mismatch between
                 the provided inputs and the expectations of the layer.
         """
-        inputs = to_list(inputs)
+        inputs = to_list(inputs) #list()
         for x in inputs:
             try:
                 K.is_keras_tensor(x)
             except ValueError:
+                # isn't ==> isn\'t
                 raise ValueError('Layer ' + self.name + ' was called with '
                                  'an input that isn\'t a symbolic tensor. '
                                  'Received type: ' +
@@ -301,6 +304,7 @@ class Layer(object):
                              'but it received ' + str(len(inputs)) +
                              ' input tensors. Input received: ' +
                              str(inputs))
+        # enumerate(zip()) is very good example about how to write coding!!!
         for input_index, (x, spec) in enumerate(zip(inputs, input_spec)):
             if spec is None:
                 continue
