@@ -188,15 +188,16 @@ class Layer(object):
         if not self.trainable and not self.stateful:
             return []
         return self._updates
-
+#====================================
     @property
     def built(self):
         return self._built
 
-    @built.setter
+    @built.setter # what's mean of @ build.setter???
     def built(self, value):
         self._built = value
-
+# @property -> built -> @built.setter
+#====================================
     @property
     def trainable_weights(self):
         trainable = getattr(self, 'trainable', True)
