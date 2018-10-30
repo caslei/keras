@@ -335,7 +335,7 @@ class Layer(object):
                                      str(K.ndim(x)))
             # Check dtype.
             if spec.dtype is not None:
-                if K.dtype(x) != spec.dtype:
+                if K.dtype(x) != spec.dtype: #K.dtype(x) gets the type of 'x'
                     raise ValueError('Input ' + str(input_index) +
                                      ' is incompatible with layer ' +
                                      self.name + ': expected dtype=' +
@@ -344,7 +344,7 @@ class Layer(object):
             # Check specific shape axes.
             if spec.axes:
                 try:
-                    x_shape = K.int_shape(x)
+                    x_shape = K.int_shape(x) # K.int_shape() return shape
                 except TypeError:
                     x_shape = None
                 if x_shape is not None:
@@ -449,13 +449,13 @@ class Layer(object):
 
             # Handle mask propagation.
             previous_mask = _collect_previous_mask(inputs)
-            user_kwargs = copy.copy(kwargs)
+            user_kwargs = copy.copy(kwargs) # copy.copy() makes copies separate
             if not is_all_none(previous_mask):
                 # The previous layer generated a mask.
                 if has_arg(self.call, 'mask'):
                     if 'mask' not in kwargs:
                         # If mask is explicitly passed to __call__,
-                        # we should override the default mask.
+                        # we should 'override' the default mask.
                         kwargs['mask'] = previous_mask
             # Handle automatic shape inference (only useful for Theano).
             input_shape = _collect_input_shape(inputs)
@@ -472,13 +472,12 @@ class Layer(object):
             output_ls_copy = []
             for x in output_ls:
                 if x in inputs_ls:
-                    x = K.identity(x)
+                    x = K.identity(x) # K.identity() ???
                 output_ls_copy.append(x)
             output = unpack_singleton(output_ls_copy)
 
             # Inferring the output shape is only relevant for Theano.
-            if all([s is not None
-                    for s in to_list(input_shape)]):
+            if all([s is not None for s in to_list(input_shape)]):
                 output_shape = self.compute_output_shape(input_shape)
             else:
                 if isinstance(input_shape, list):
@@ -531,7 +530,7 @@ class Layer(object):
             arguments: dictionary of keyword arguments that were passed to the
                 `call` method of the layer at the call that created the node.
         """
-        input_tensors = to_list(input_tensors)
+        input_tensors = to_list(input_tensors) # to_list(x) -> type(x)==list ???
         output_tensors = to_list(output_tensors)
         input_masks = to_list(input_masks)
         output_masks = to_list(output_masks)
@@ -554,7 +553,7 @@ class Layer(object):
                 tensor_indices.append(None)
 
         # Create node, add it to inbound nodes.
-        Node(
+        Node( #====================================
             self,
             inbound_layers=inbound_layers,
             node_indices=node_indices,
@@ -954,12 +953,12 @@ class Layer(object):
                 (e.g. L2 weight regularization, which only depends
                 on the layer's weights variables, not on any inputs tensors).
         """
-        if losses is None or losses == []:
-            return
+        if losses is None or losses == []: return
+
         # Update self.losses
         losses = to_list(losses)
-        if hasattr(self, '_losses'):
-            self._losses += losses
+        if hasattr(self, '_losses'): self._losses += losses
+
         # Update self._per_input_updates
         if isinstance(inputs, list) and inputs == []:
             inputs = None
@@ -1053,8 +1052,8 @@ class Layer(object):
                              str(len(params)) +
                              ' weights. Provided weights: ' +
                              str(weights)[:50] + '...')
-        if not params:
-            return
+        if not params: return
+
         weight_value_tuples = []
         param_values = K.batch_get_value(params)
         for pv, p, w in zip(param_values, params, weights):
