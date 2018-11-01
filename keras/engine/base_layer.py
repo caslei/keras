@@ -1072,12 +1072,12 @@ class Layer(object):
             Weights values as a list of numpy arrays.
         """
         params = self.weights
-        return K.batch_get_value(params)
+        return K.batch_get_value(params) # 'K.batch_get_value' function
 
     def get_config(self):
         """Returns the config of the layer.
 
-        A layer config is a Python dictionary (serializable)
+        A layer config is a Python 'dictionary' (serializable)
         containing the configuration of a layer.
         The same layer can be reinstantiated later
         (without its trained weights) from this configuration.
@@ -1089,8 +1089,7 @@ class Layer(object):
         # Returns
             Python dictionary.
         """
-        config = {'name': self.name,
-                  'trainable': self.trainable}
+        config = {'name': self.name, 'trainable': self.trainable}
         if hasattr(self, 'batch_input_shape'):
             config['batch_input_shape'] = self.batch_input_shape
         if hasattr(self, 'dtype'):
