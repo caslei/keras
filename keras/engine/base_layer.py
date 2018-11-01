@@ -1112,7 +1112,10 @@ class Layer(object):
         # Returns
             A layer instance.
         """
-        return cls(**config)
+        # **dict ==> treat the key-value pairs in the dictionary as additional
+        # named argumetns to the function
+        # cls(**config) ==> cls(name=self.name, ..., dtype=self.dtype)
+        return cls(**config) 
 
     def count_params(self):
         """Counts the total number of scalars composing the weights.
