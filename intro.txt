@@ -1,3 +1,6 @@
+# how to run Python codes from sublime Text 2?
+https://stackoverflow.com/questions/8551735/how-do-i-run-python-code-from-sublime-text-2/30033772#30033772
+
 keras
     |- .github
     |- docker
