@@ -26,7 +26,7 @@ maxlen = 80
 batch_size = 32
 
 print('Loading data...')
-(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features) # load_data()
 print(len(x_train), 'train sequences')
 print(len(x_test), 'test sequences')
 
@@ -43,16 +43,15 @@ model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(1, activation='sigmoid'))
 
 # try using different optimizers and different optimizer configs
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 print('Train...')
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=15,
-          validation_data=(x_test, y_test))
-score, acc = model.evaluate(x_test, y_test,
-                            batch_size=batch_size)
+          validation_data=(x_test, y_test),
+          )
+
+score, acc = model.evaluate(x_test, y_test, batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
