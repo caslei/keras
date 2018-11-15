@@ -68,6 +68,7 @@ input_characters = set()
 target_characters = set()
 with open(data_path, 'r', encoding='utf-8') as f:
     lines = f.read().split('\n')
+
 for line in lines[: min(num_samples, len(lines) - 1)]:
     input_text, target_text = line.split('\t')
     # We use "tab" as the "start sequence" character
@@ -76,11 +77,9 @@ for line in lines[: min(num_samples, len(lines) - 1)]:
     input_texts.append(input_text)
     target_texts.append(target_text)
     for char in input_text:
-        if char not in input_characters:
-            input_characters.add(char)
+        if char not in input_characters: input_characters.add(char)
     for char in target_text:
-        if char not in target_characters:
-            target_characters.add(char)
+        if char not in target_characters: target_characters.add(char)
 
 input_characters = sorted(list(input_characters))
 target_characters = sorted(list(target_characters))
@@ -141,16 +140,18 @@ decoder_outputs = decoder_dense(decoder_outputs)
 
 # Define the model that will turn
 # `encoder_input_data` & `decoder_input_data` into `decoder_target_data`
+# =========== multiple inputs, multiple outputs ================
 model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
 # Run training
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+
 model.fit([encoder_input_data, decoder_input_data], decoder_target_data,
           batch_size=batch_size,
           epochs=epochs,
           validation_split=0.2)
 # Save model
-model.save('s2s.h5')
+model.save('s2s.h5') # save the entire model or just weight?
 
 # Next: inference mode (sampling).
 # Here's the drill:
