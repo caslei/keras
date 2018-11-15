@@ -18,7 +18,7 @@ from ..utils.generic_utils import unpack_singleton
 from ..utils.generic_utils import is_all_none
 from ..legacy import interfaces
 
-
+# 'object' is the public base class
 class Layer(object):
     """Abstract base layer class.
 
@@ -114,7 +114,10 @@ class Layer(object):
         # note that 'dtype', 'input_shape' and 'batch_input_shape'
         # are only applicable to input layers: do not pass these keywords
         # to non-input layers.
-        allowed_kwargs = {'input_shape',
+
+        # type(allowed_kwargs) => class 'set'
+        # 如果allowed_kwargs中存在冒号，则其类型为 'dict'
+        allowed_kwargs = {'input_shape', 
                           'batch_input_shape',
                           'batch_size',
                           'dtype',
@@ -123,12 +126,12 @@ class Layer(object):
                           'weights',
                           'input_dtype',  # legacy
                           }
-        for kwarg in kwargs:
+        for kwarg in kwargs: # kwargs is the type of 'dict'
             if kwarg not in allowed_kwargs:
                 raise TypeError('Keyword argument not understood:', kwarg)
         name = kwargs.get('name')
         if not name:
-            prefix = self.__class__.__name__
+            prefix = self.__class__.__name__ # '__' denotes certain property
             name = _to_snake_case(prefix) + '_' + str(K.get_uid(prefix))
         self.name = name
 
@@ -143,8 +146,8 @@ class Layer(object):
                     batch_size = kwargs['batch_size']
                 else:
                     batch_size = None
-                batch_input_shape = (
-                    batch_size,) + tuple(kwargs['input_shape'])
+                batch_input_shape = (batch_size,) + 
+                                    tuple(kwargs['input_shape'])
             self.batch_input_shape = batch_input_shape
 
             # Set dtype.
@@ -152,7 +155,7 @@ class Layer(object):
             if dtype is None:
                 dtype = kwargs.get('input_dtype')
             if dtype is None:
-                dtype = K.floatx()
+                dtype = K.floatx() # cast to 'float'
             self.dtype = dtype
 
         if 'weights' in kwargs:
@@ -160,7 +163,7 @@ class Layer(object):
         else:
             self._initial_weights = None
 
-    @staticmethod
+    @staticmethod # ==> 类的静态方法,即不用实例化就可以调用的函数
     def _node_key(layer, node_index):
         """Converts a layer and its index to a unique (immutable type) name.
 
@@ -176,7 +179,7 @@ class Layer(object):
         """
         return layer.name + '_ib-' + str(node_index)
 
-    @property
+    @property # ==> 将函数转化为同名的类属性, 即Layer.losses() => Layer.lossse
     def losses(self):
         return self._losses
 
@@ -185,15 +188,17 @@ class Layer(object):
         if not self.trainable and not self.stateful:
             return []
         return self._updates
-
+#====================================
     @property
     def built(self):
         return self._built
 
-    @built.setter
+    @built.setter # what's mean of @ build.setter???
     def built(self, value):
         self._built = value
-
+# @property -> built -> @built.setter
+# the same function name of 'built'   !!!
+#====================================
     @property
     def trainable_weights(self):
         trainable = getattr(self, 'trainable', True)
@@ -206,6 +211,7 @@ class Layer(object):
     def trainable_weights(self, weights):
         self._trainable_weights = weights
 
+#====================================
     @property
     def non_trainable_weights(self):
         trainable = getattr(self, 'trainable', True)
@@ -217,7 +223,7 @@ class Layer(object):
     @non_trainable_weights.setter
     def non_trainable_weights(self, weights):
         self._non_trainable_weights = weights
-
+#=========================================
     @interfaces.legacy_add_weight_support
     def add_weight(self,
                    name,
@@ -244,8 +250,8 @@ class Layer(object):
             The created weight variable.
         """
         initializer = initializers.get(initializer)
-        if dtype is None:
-            dtype = K.floatx()
+        if dtype is None: dtype = K.floatx()
+        # define a tensor variable
         weight = K.variable(initializer(shape),
                             dtype=dtype,
                             name=name,
@@ -273,11 +279,12 @@ class Layer(object):
             ValueError: in case of mismatch between
                 the provided inputs and the expectations of the layer.
         """
-        inputs = to_list(inputs)
+        inputs = to_list(inputs) #list()
         for x in inputs:
             try:
                 K.is_keras_tensor(x)
             except ValueError:
+                # isn't ==> isn\'t
                 raise ValueError('Layer ' + self.name + ' was called with '
                                  'an input that isn\'t a symbolic tensor. '
                                  'Received type: ' +
@@ -297,6 +304,7 @@ class Layer(object):
                              'but it received ' + str(len(inputs)) +
                              ' input tensors. Input received: ' +
                              str(inputs))
+        # enumerate(zip()) is very good example about how to write coding!!!
         for input_index, (x, spec) in enumerate(zip(inputs, input_spec)):
             if spec is None:
                 continue
@@ -327,7 +335,7 @@ class Layer(object):
                                      str(K.ndim(x)))
             # Check dtype.
             if spec.dtype is not None:
-                if K.dtype(x) != spec.dtype:
+                if K.dtype(x) != spec.dtype: #K.dtype(x) gets the type of 'x'
                     raise ValueError('Input ' + str(input_index) +
                                      ' is incompatible with layer ' +
                                      self.name + ': expected dtype=' +
@@ -336,7 +344,7 @@ class Layer(object):
             # Check specific shape axes.
             if spec.axes:
                 try:
-                    x_shape = K.int_shape(x)
+                    x_shape = K.int_shape(x) # K.int_shape() return shape
                 except TypeError:
                     x_shape = None
                 if x_shape is not None:
@@ -441,13 +449,13 @@ class Layer(object):
 
             # Handle mask propagation.
             previous_mask = _collect_previous_mask(inputs)
-            user_kwargs = copy.copy(kwargs)
+            user_kwargs = copy.copy(kwargs) # copy.copy() makes copies separate
             if not is_all_none(previous_mask):
                 # The previous layer generated a mask.
                 if has_arg(self.call, 'mask'):
                     if 'mask' not in kwargs:
                         # If mask is explicitly passed to __call__,
-                        # we should override the default mask.
+                        # we should 'override' the default mask.
                         kwargs['mask'] = previous_mask
             # Handle automatic shape inference (only useful for Theano).
             input_shape = _collect_input_shape(inputs)
@@ -464,13 +472,12 @@ class Layer(object):
             output_ls_copy = []
             for x in output_ls:
                 if x in inputs_ls:
-                    x = K.identity(x)
+                    x = K.identity(x) # K.identity() ???
                 output_ls_copy.append(x)
             output = unpack_singleton(output_ls_copy)
 
             # Inferring the output shape is only relevant for Theano.
-            if all([s is not None
-                    for s in to_list(input_shape)]):
+            if all([s is not None for s in to_list(input_shape)]):
                 output_shape = self.compute_output_shape(input_shape)
             else:
                 if isinstance(input_shape, list):
@@ -523,7 +530,7 @@ class Layer(object):
             arguments: dictionary of keyword arguments that were passed to the
                 `call` method of the layer at the call that created the node.
         """
-        input_tensors = to_list(input_tensors)
+        input_tensors = to_list(input_tensors) # to_list(x) -> type(x)==list ???
         output_tensors = to_list(output_tensors)
         input_masks = to_list(input_masks)
         output_masks = to_list(output_masks)
@@ -546,7 +553,7 @@ class Layer(object):
                 tensor_indices.append(None)
 
         # Create node, add it to inbound nodes.
-        Node(
+        Node( #====================================
             self,
             inbound_layers=inbound_layers,
             node_indices=node_indices,
@@ -946,12 +953,12 @@ class Layer(object):
                 (e.g. L2 weight regularization, which only depends
                 on the layer's weights variables, not on any inputs tensors).
         """
-        if losses is None or losses == []:
-            return
+        if losses is None or losses == []: return
+
         # Update self.losses
         losses = to_list(losses)
-        if hasattr(self, '_losses'):
-            self._losses += losses
+        if hasattr(self, '_losses'): self._losses += losses
+
         # Update self._per_input_updates
         if isinstance(inputs, list) and inputs == []:
             inputs = None
@@ -1045,8 +1052,8 @@ class Layer(object):
                              str(len(params)) +
                              ' weights. Provided weights: ' +
                              str(weights)[:50] + '...')
-        if not params:
-            return
+        if not params: return
+
         weight_value_tuples = []
         param_values = K.batch_get_value(params)
         for pv, p, w in zip(param_values, params, weights):
@@ -1065,12 +1072,12 @@ class Layer(object):
             Weights values as a list of numpy arrays.
         """
         params = self.weights
-        return K.batch_get_value(params)
+        return K.batch_get_value(params) # 'K.batch_get_value' function
 
     def get_config(self):
         """Returns the config of the layer.
 
-        A layer config is a Python dictionary (serializable)
+        A layer config is a Python 'dictionary' (serializable)
         containing the configuration of a layer.
         The same layer can be reinstantiated later
         (without its trained weights) from this configuration.
@@ -1082,8 +1089,7 @@ class Layer(object):
         # Returns
             Python dictionary.
         """
-        config = {'name': self.name,
-                  'trainable': self.trainable}
+        config = {'name': self.name, 'trainable': self.trainable}
         if hasattr(self, 'batch_input_shape'):
             config['batch_input_shape'] = self.batch_input_shape
         if hasattr(self, 'dtype'):
@@ -1106,7 +1112,10 @@ class Layer(object):
         # Returns
             A layer instance.
         """
-        return cls(**config)
+        # **dict ==> treat the key-value pairs in the dictionary as additional
+        # named argumetns to the function
+        # cls(**config) ==> cls(name=self.name, ..., dtype=self.dtype)
+        return cls(**config) 
 
     def count_params(self):
         """Counts the total number of scalars composing the weights.
@@ -1172,6 +1181,7 @@ class InputSpec(object):
                 ('max_ndim=' + str(self.max_ndim)) if self.max_ndim else '',
                 ('min_ndim=' + str(self.min_ndim)) if self.min_ndim else '',
                 ('axes=' + str(self.axes)) if self.axes else '']
+
         return 'InputSpec(%s)' % ', '.join(x for x in spec if x)
 
 

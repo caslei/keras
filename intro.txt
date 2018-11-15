@@ -1,3 +1,6 @@
+# how to run Python codes from sublime Text 2?
+https://stackoverflow.com/questions/8551735/how-do-i-run-python-code-from-sublime-text-2/30033772#30033772
+
 keras
     |- .github
     |- docker
@@ -162,7 +165,7 @@ keras
         |- __init__.py
 
     |- engine
-        |- base_layer.py
+        |- base_layer.py                     # very important!!!
         |- input_layer.py
         |- network.py
         |- saving.py
