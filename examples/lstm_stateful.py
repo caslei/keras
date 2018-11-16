@@ -81,15 +81,14 @@ print('Generating Data...')
 
 def gen_uniform_amp(amp=1, xn=10000):
     """Generates uniform random data between
-    -amp and +amp
-    and of length xn
+    -amp and +amp, and of length xn
 
     Arguments:
         amp: maximum/minimum range of uniform data
         xn: length of series
     """
     data_input = np.random.uniform(-1 * amp, +1 * amp, xn)
-    data_input = pd.DataFrame(data_input)
+    data_input = pd.DataFrame(data_input) # operate CSV files
     return data_input
 
 # Since the output is a moving average of the input,
@@ -106,15 +105,15 @@ to_drop = max(tsteps - 1, lahead - 1)
 data_input = gen_uniform_amp(amp=0.1, xn=input_len + to_drop)
 
 # set the target to be a N-point average of the input
-expected_output = data_input.rolling(window=tsteps, center=False).mean()
+expected_output = data_input.rolling(window=tsteps, center=False).mean() # mean
 
 # when lahead > 1, need to convert the input to "rolling window view"
 # https://docs.scipy.org/doc/numpy/reference/generated/numpy.repeat.html
-if lahead > 1:
+if lahead > 1: # 'np.repeat' function !!!
     data_input = np.repeat(data_input.values, repeats=lahead, axis=1)
     data_input = pd.DataFrame(data_input)
     for i, c in enumerate(data_input.columns):
-        data_input[c] = data_input[c].shift(i)
+        data_input[c] = data_input[c].shift(i) # 'shift' function!!!
 
 # drop the nan
 expected_output = expected_output[to_drop:]
@@ -141,13 +140,13 @@ plt.show()
 
 def create_model(stateful):
     model = Sequential()
-    model.add(LSTM(20,
-              input_shape=(lahead, 1),
-              batch_size=batch_size,
-              stateful=stateful))
+    model.add(
+        LSTM(20, input_shape=(lahead, 1), batch_size=batch_size, stateful=stateful)
+        )
     model.add(Dense(1))
     model.compile(loss='mse', optimizer='adam')
     return model
+
 
 print('Creating Stateful Model...')
 model_stateful = create_model(stateful=True)
@@ -157,7 +156,7 @@ model_stateful = create_model(stateful=True)
 def split_data(x, y, ratio=0.8):
     to_train = int(input_len * ratio)
     # tweak to match with batch_size
-    to_train -= to_train % batch_size
+    to_train -= to_train % batch_size # batch_size的整数倍
 
     x_train = x[:to_train]
     y_train = y[:to_train]
@@ -178,7 +177,6 @@ def split_data(x, y, ratio=0.8):
     reshape_2 = lambda x: x.values.reshape((x.shape[0], 1))
     y_train = reshape_2(y_train)
     y_test = reshape_2(y_test)
-
     return (x_train, y_train), (x_test, y_test)
 
 
@@ -197,24 +195,25 @@ for i in range(epochs):
     # lower resolution than the original series contained in data_input.
     # Each of these series are offset by one step and can be
     # extracted with data_input[i::batch_size].
-    model_stateful.fit(x_train,
-                       y_train,
+    model_stateful.fit(x_train, y_train,
                        batch_size=batch_size,
                        epochs=1,
                        verbose=1,
                        validation_data=(x_test, y_test),
                        shuffle=False)
-    model_stateful.reset_states()
+
+    model_stateful.reset_states() # what's mean of 'reset_states'
 
 print('Predicting')
 predicted_stateful = model_stateful.predict(x_test, batch_size=batch_size)
+
+# ==================================================
 
 print('Creating Stateless Model...')
 model_stateless = create_model(stateful=False)
 
 print('Training')
-model_stateless.fit(x_train,
-                    y_train,
+model_stateless.fit(x_train, y_train,
                     batch_size=batch_size,
                     epochs=epochs,
                     verbose=1,
@@ -224,7 +223,7 @@ model_stateless.fit(x_train,
 print('Predicting')
 predicted_stateless = model_stateless.predict(x_test, batch_size=batch_size)
 
-# ----------------------------
+# ==================================================
 
 print('Plotting Results')
 plt.subplot(3, 1, 1)
