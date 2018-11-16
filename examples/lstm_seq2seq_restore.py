@@ -10,7 +10,7 @@ it is trained.
 '''
 from __future__ import print_function
 
-from keras.models import Model, load_model
+from keras.models import Model, load_model # 'load_model' !!!!
 from keras.layers import Input
 import numpy as np
 
@@ -35,7 +35,7 @@ for line in lines[: min(num_samples, len(lines) - 1)]:
     input_text, target_text = line.split('\t')
     # We use "tab" as the "start sequence" character
     # for the targets, and "\n" as "end sequence" character.
-    target_text = '\t' + target_text + '\n'
+    target_text = '\t' + target_text + '\n' # '\t' is 'tab'
     input_texts.append(input_text)
     target_texts.append(target_text)
     for char in input_text:
@@ -45,7 +45,7 @@ for line in lines[: min(num_samples, len(lines) - 1)]:
         if char not in target_characters:
             target_characters.add(char)
 
-input_characters = sorted(list(input_characters))
+input_characters = sorted(list(input_characters)) # sorted(), reversed()
 target_characters = sorted(list(target_characters))
 num_encoder_tokens = len(input_characters)
 num_decoder_tokens = len(target_characters)
@@ -58,7 +58,7 @@ print('Number of unique output tokens:', num_decoder_tokens)
 print('Max sequence length for inputs:', max_encoder_seq_length)
 print('Max sequence length for outputs:', max_decoder_seq_length)
 
-input_token_index = dict(
+input_token_index = dict( # dictionary of type
     [(char, i) for i, char in enumerate(input_characters)])
 target_token_index = dict(
     [(char, i) for i, char in enumerate(target_characters)])
@@ -72,13 +72,14 @@ for i, input_text in enumerate(input_texts):
         encoder_input_data[i, t, input_token_index[char]] = 1.
 
 # Restore the model and construct the encoder and decoder.
-model = load_model('s2s.h5')
-
+model = load_model('s2s.h5') # contain weights and necessary configurations!!!
+# 编码器
 encoder_inputs = model.input[0]   # input_1
 encoder_outputs, state_h_enc, state_c_enc = model.layers[2].output   # lstm_1
 encoder_states = [state_h_enc, state_c_enc]
 encoder_model = Model(encoder_inputs, encoder_states)
 
+# 解码器
 decoder_inputs = model.input[1]   # input_2
 decoder_state_input_h = Input(shape=(latent_dim,), name='input_3')
 decoder_state_input_c = Input(shape=(latent_dim,), name='input_4')
@@ -90,7 +91,7 @@ decoder_states = [state_h_dec, state_c_dec]
 decoder_dense = model.layers[4]
 decoder_outputs = decoder_dense(decoder_outputs)
 decoder_model = Model(
-    [decoder_inputs] + decoder_states_inputs,
+    [decoder_inputs] + decoder_states_inputs, # three inputs
     [decoder_outputs] + decoder_states)
 
 # Reverse-lookup token index to decode sequences back to
@@ -136,13 +137,11 @@ def decode_sequence(input_seq):
 
         # Update states
         states_value = [h, c]
-
     return decoded_sentence
 
 
 for seq_index in range(100):
-    # Take one sequence (part of the training set)
-    # for trying out decoding.
+    # Take one sequence (part of the training set) for trying out decoding.
     input_seq = encoder_input_data[seq_index: seq_index + 1]
     decoded_sentence = decode_sequence(input_seq)
     print('-')
