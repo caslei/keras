@@ -74,7 +74,7 @@ else:
     print("STATELESS LSTM WILL NOT CONVERGE")
 print("*" * 33)
 
-np.random.seed(1986)
+np.random.seed(1986) # 设置随机数种子，以便下次可重复
 
 print('Generating Data...')
 
