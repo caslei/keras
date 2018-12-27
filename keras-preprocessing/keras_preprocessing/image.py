@@ -13,10 +13,12 @@ import warnings
 import multiprocessing.pool
 from keras_preprocessing import get_keras_submodule
 
+
 try:
     IteratorType = get_keras_submodule('utils').Sequence
 except ImportError:
     IteratorType = object
+
 
 try:
     from PIL import ImageEnhance
@@ -24,6 +26,7 @@ try:
 except ImportError:
     pil_image = None
     ImageEnhance = None
+
 
 try:
     import scipy
@@ -34,12 +37,14 @@ try:
 except ImportError:
     scipy = None
 
+
 if pil_image is not None:
     _PIL_INTERPOLATION_METHODS = {
         'nearest': pil_image.NEAREST,
         'bilinear': pil_image.BILINEAR,
         'bicubic': pil_image.BICUBIC,
     }
+
     # These methods were only introduced in version 3.4.0 (2016).
     if hasattr(pil_image, 'HAMMING'):
         _PIL_INTERPOLATION_METHODS['hamming'] = pil_image.HAMMING
@@ -48,6 +53,7 @@ if pil_image is not None:
     # This method is new in version 1.1.3 (2013).
     if hasattr(pil_image, 'LANCZOS'):
         _PIL_INTERPOLATION_METHODS['lanczos'] = pil_image.LANCZOS
+
 
 
 def random_rotation(x, rg, row_axis=1, col_axis=2, channel_axis=0,
