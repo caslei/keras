@@ -717,10 +717,13 @@ class ImageDataGenerator(object):
     model.fit_generator(train_generator, steps_per_epoch=2000, epochs=50)
     ```
 
+
+    #================================================
     Example of using ```.flow_from_dataframe(dataframe, directory,
                                             x_col, y_col,
                                             has_ext)```:
-
+    #================================================
+    
     ```python
 
     train_df = pandas.read_csv("./train.csv")
@@ -833,7 +836,7 @@ class ImageDataGenerator(object):
         self.principal_components = None
 
         if np.isscalar(zoom_range):
-            self.zoom_range = [1 - zoom_range, 1 + zoom_range]
+            self.zoom_range = [1 - zoom_range, 1 + zoom_range] #====
         elif len(zoom_range) == 2:
             self.zoom_range = [zoom_range[0], zoom_range[1]]
         else:
