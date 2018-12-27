@@ -679,7 +679,11 @@ class ImageDataGenerator(object):
             validation_steps=800)
     ```
 
+
+    #================================================
     Example of transforming images and masks together.
+    #================================================
+
 
     ```python
     # we create two instances with the same arguments
@@ -710,10 +714,7 @@ class ImageDataGenerator(object):
     # combine generators into one which yields image and masks
     train_generator = zip(image_generator, mask_generator)
 
-    model.fit_generator(
-        train_generator,
-        steps_per_epoch=2000,
-        epochs=50)
+    model.fit_generator(train_generator, steps_per_epoch=2000, epochs=50)
     ```
 
     Example of using ```.flow_from_dataframe(dataframe, directory,
