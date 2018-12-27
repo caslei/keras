@@ -519,17 +519,17 @@ def load_img(path, grayscale=False, color_mode='rgb', target_size=None,
             if interpolation not in _PIL_INTERPOLATION_METHODS:
                 raise ValueError(
                     'Invalid interpolation method {} specified. Supported '
-                    'methods are {}'.format(
-                        interpolation,
-                        ", ".join(_PIL_INTERPOLATION_METHODS.keys())))
+                    'methods are {}'.format(interpolation,
+                        ", ".join(_PIL_INTERPOLATION_METHODS.keys() )) )
             resample = _PIL_INTERPOLATION_METHODS[interpolation]
             img = img.resize(width_height_tuple, resample)
     return img
 
 
 def list_pictures(directory, ext='jpg|jpeg|bmp|png|ppm'):
-    return [os.path.join(root, f)
-            for root, _, files in os.walk(directory) for f in files
+    # [expr, for ... for ... if ...]
+    return [os.path.join(root, f) 
+            for root, _, files in os.walk(directory) for f in files 
             if re.match(r'([\w]+\.(?:' + ext + '))', f.lower())]
 
 
