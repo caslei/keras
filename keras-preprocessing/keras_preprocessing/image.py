@@ -533,6 +533,9 @@ def list_pictures(directory, ext='jpg|jpeg|bmp|png|ppm'):
             if re.match(r'([\w]+\.(?:' + ext + '))', f.lower())]
 
 
+#                    <-- NumpyArrayIterator
+# ImageDataGenerator <-- DirectoryIterator
+#                    <-- DataFrameIterator
 class ImageDataGenerator(object):
     """Generate batches of tensor image data with real-time data augmentation.
      The data will be looped over (in batches).
