@@ -1431,7 +1431,7 @@ class Iterator(IteratorType):
         self.total_batches_seen = 0
         self.lock = threading.Lock()
         self.index_array = None
-        self.index_generator = self._flow_index()
+        self.index_generator = self._flow_index()  # a function!!!
 
     def _set_index_array(self):
         self.index_array = np.arange(self.n)
@@ -1440,17 +1440,16 @@ class Iterator(IteratorType):
 
     def __getitem__(self, idx):
         if idx >= len(self):
-            raise ValueError('Asked to retrieve element {idx}, '
-                             'but the Sequence '
-                             'has length {length}'.format(idx=idx,
-                                                          length=len(self)))
-        if self.seed is not None:
-            np.random.seed(self.seed + self.total_batches_seen)
+            raise ValueError('Asked to retrieve element {idx}, but the Sequence '
+                             'has length {length}'.format(idx=idx, length=len(self)))
+
+        if self.seed is not None: np.random.seed(self.seed + self.total_batches_seen)
         self.total_batches_seen += 1
-        if self.index_array is None:
-            self._set_index_array()
-        index_array = self.index_array[self.batch_size * idx:
-                                       self.batch_size * (idx + 1)]
+        if self.index_array is None: self._set_index_array()
+
+        #===========================================================
+        index_array = self.index_array[self.batch_size*idx: self.batch_size*(idx + 1)]
+        #===========================================================
         return self._get_batches_of_transformed_samples(index_array)
 
     def common_init(self, image_data_generator,
@@ -1609,7 +1608,7 @@ class NumpyArrayIterator(Iterator):
                              (np.asarray(x).shape, np.asarray(y).shape))
         if sample_weight is not None and len(x) != len(sample_weight):
             raise ValueError('`x` (images tensor) and `sample_weight` '
-                             'should have the same length. '
+                             'should have the same length. '  # ================
                              'Found: x.shape = %s, sample_weight.shape = %s' %
                              (np.asarray(x).shape, np.asarray(sample_weight).shape))
         if subset is not None:
@@ -1807,10 +1806,10 @@ class DirectoryIterator(Iterator):
 
     # Arguments
         directory: Path to the directory to read images from.
-            Each subdirectory in this directory will be
-            considered to contain images from one class,
-            or alternatively you could specify class subdirectories
-            via the `classes` argument.
+            Each subdirectory in this directory will be considered to 
+            contain images from one class, or alternatively you could
+            specify class subdirectories via the `classes` argument.
+            
         image_data_generator: Instance of `ImageDataGenerator`
             to use for random transformations and normalization.
         target_size: tuple of integers, dimensions to resize input images to.
