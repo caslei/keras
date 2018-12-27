@@ -168,7 +168,7 @@ def random_zoom(x, zoom_range, row_axis=1, col_axis=2, channel_axis=0,
                                fill_mode=fill_mode, cval=cval)
     return x
 
-
+# =======================================
 def apply_channel_shift(x, intensity, channel_axis=0):
     """Performs a channel shift.
 
@@ -207,7 +207,7 @@ def random_channel_shift(x, intensity_range, channel_axis=0):
     intensity = np.random.uniform(-intensity_range, intensity_range)
     return apply_channel_shift(x, intensity, channel_axis=channel_axis)
 
-
+# =======================================
 def apply_brightness_shift(x, brightness):
     """Performs a brightness shift.
 
@@ -252,9 +252,9 @@ def random_brightness(x, brightness_range):
             'Received: %s' % (brightness_range,))
 
     u = np.random.uniform(brightness_range[0], brightness_range[1])
-    return apply_brightness_shift(x, u)
+    return apply_brightness_shift(x, u) # call 'apply_bringhtness_shift'
 
-
+# =======================================
 def transform_matrix_offset_center(matrix, x, y):
     o_x = float(x) / 2 + 0.5
     o_y = float(y) / 2 + 0.5
@@ -331,7 +331,7 @@ def apply_affine_transform(x, theta=0, tx=0, ty=0, shear=0, zx=1, zy=1,
     if transform_matrix is not None:
         h, w = x.shape[row_axis], x.shape[col_axis]
         transform_matrix = transform_matrix_offset_center(
-            transform_matrix, h, w)
+                                              transform_matrix, h, w)
         x = np.rollaxis(x, channel_axis, 0)
         final_affine_matrix = transform_matrix[:2, :2]
         final_offset = transform_matrix[:2, 2]
