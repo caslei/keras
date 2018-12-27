@@ -1181,8 +1181,7 @@ class ImageDataGenerator(object):
         img_row_axis = self.row_axis - 1
         img_col_axis = self.col_axis - 1
 
-        if seed is not None:
-            np.random.seed(seed)
+        if seed is not None: np.random.seed(seed)  #===========================
 
         if self.rotation_range:
             theta = np.random.uniform(
@@ -1370,8 +1369,7 @@ class ImageDataGenerator(object):
                 str(x.shape) + ' (' + str(x.shape[self.channel_axis]) +
                 ' channels).')
 
-        if seed is not None:
-            np.random.seed(seed)
+        if seed is not None: np.random.seed(seed)  #===========================
 
         x = np.copy(x)
         if augment:
@@ -1549,6 +1547,7 @@ class Iterator(IteratorType):
         raise NotImplementedError
 
 
+# base class "Iterator"
 class NumpyArrayIterator(Iterator):
     """Iterator yielding data from a Numpy array.
 
@@ -1801,15 +1800,17 @@ def _list_valid_filenames_in_directory(directory, white_list_formats, split,
     return classes, filenames
 
 
+# base class "Iterator"
 class DirectoryIterator(Iterator):
     """Iterator capable of reading images from a directory on disk.
 
     # Arguments
         directory: Path to the directory to read images from.
+            # "Each subdirectory ==> one class"
             Each subdirectory in this directory will be considered to 
             contain images from one class, or alternatively you could
             specify class subdirectories via the `classes` argument.
-            
+
         image_data_generator: Instance of `ImageDataGenerator`
             to use for random transformations and normalization.
         target_size: tuple of integers, dimensions to resize input images to.
@@ -1982,6 +1983,7 @@ class DirectoryIterator(Iterator):
         return self._get_batches_of_transformed_samples(index_array)
 
 
+# base class "Iterator"
 class DataFrameIterator(Iterator):
     """Iterator capable of reading images from a directory on disk
         through a dataframe.
@@ -2079,8 +2081,7 @@ class DataFrameIterator(Iterator):
                              '"other" or None.')
         self.class_mode = class_mode
         self.dtype = dtype
-        white_list_formats = {'png', 'jpg', 'jpeg', 'bmp',
-                              'ppm', 'tif', 'tiff'}
+        white_list_formats = {'png', 'jpg', 'jpeg', 'bmp', 'ppm', 'tif', 'tiff'} #========
         # First, count the number of samples and classes.
         self.samples = 0
 
