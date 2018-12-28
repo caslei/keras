@@ -1107,7 +1107,7 @@ class ImageDataGenerator(object):
              and `y` is a numpy array of corresponding labels.
         """
 
-        return DataFrameIterator(dataframe, directory, self,
+        return DataFrameIterator(dataframe, directory, self, # ==> image_data_generator
                                  x_col=x_col, y_col=y_col, has_ext=has_ext,
                                  target_size=target_size, color_mode=color_mode,
                                  classes=classes, class_mode=class_mode,
@@ -1328,10 +1328,7 @@ class ImageDataGenerator(object):
         params = self.get_random_transform(x.shape, seed)
         return self.apply_transform(x, params)
 
-    def fit(self, x,
-            augment=False,
-            rounds=1,
-            seed=None):
+    def fit(self, x, augment=False, rounds=1, seed=None):
         """Fits the data generator to some sample data.
 
         This computes the internal data stats related to the
@@ -1665,10 +1662,7 @@ class NumpyArrayIterator(Iterator):
         self.save_to_dir = save_to_dir
         self.save_prefix = save_prefix
         self.save_format = save_format
-        super(NumpyArrayIterator, self).__init__(x.shape[0],
-                                                 batch_size,
-                                                 shuffle,
-                                                 seed)
+        super(NumpyArrayIterator, self).__init__(x.shape[0], batch_size, shuffle, seed)
 
     def _get_batches_of_transformed_samples(self, index_array):
         batch_x = np.zeros(tuple([len(index_array)] + list(self.x.shape)[1:]),
@@ -1937,11 +1931,15 @@ class DirectoryIterator(Iterator):
             x = img_to_array(img, data_format=self.data_format)
             # Pillow images should be closed after `load_img`,
             # but not PIL images.
-            if hasattr(img, 'close'):
-                img.close()
+            if hasattr(img, 'close'): img.close()
+            
+            #===========================================
+            # 
             params = self.image_data_generator.get_random_transform(x.shape)
             x = self.image_data_generator.apply_transform(x, params)
             x = self.image_data_generator.standardize(x)
+            #===========================================
+
             batch_x[i] = x
         # optionally save augmented images to disk for debugging purposes
         if self.save_to_dir:
