@@ -1894,9 +1894,9 @@ class DirectoryIterator(Iterator):
         i = 0
         for dirpath in (os.path.join(directory, subdir) for subdir in classes):
             results.append(
-                pool.apply_async(_list_valid_filenames_in_directory,
-                                 (dirpath, white_list_formats, self.split,
-                                  self.class_indices, follow_links)))
+                pool.apply_async(_list_valid_filenames_in_directory,  # ==================
+                    (dirpath, white_list_formats, self.split, self.class_indices, follow_links)))
+
         classes_list = []
         for res in results:
             classes, filenames = res.get()
@@ -1912,10 +1912,7 @@ class DirectoryIterator(Iterator):
               (self.samples, self.num_classes))
         pool.close()
         pool.join()
-        super(DirectoryIterator, self).__init__(self.samples,
-                                                batch_size,
-                                                shuffle,
-                                                seed)
+        super(DirectoryIterator, self).__init__(self.samples, batch_size, shuffle, seed)
 
     def _get_batches_of_transformed_samples(self, index_array):
         batch_x = np.zeros(
