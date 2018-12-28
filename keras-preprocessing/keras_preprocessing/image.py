@@ -1782,6 +1782,7 @@ def _list_valid_filenames_in_directory(directory, white_list_formats, split,
         for root, fname in valid_files:
             filenames.append(os.path.basename(fname))
         return filenames
+
     classes = []
     filenames = []
     for root, fname in valid_files:
@@ -1790,7 +1791,6 @@ def _list_valid_filenames_in_directory(directory, white_list_formats, split,
         relative_path = os.path.join(
             dirname, os.path.relpath(absolute_path, directory))
         filenames.append(relative_path)
-
     return classes, filenames
 
 
@@ -1872,8 +1872,7 @@ class DirectoryIterator(Iterator):
                              ' or None.')
         self.class_mode = class_mode
         self.dtype = dtype
-        white_list_formats = {'png', 'jpg', 'jpeg', 'bmp',
-                              'ppm', 'tif', 'tiff'}
+        white_list_formats = {'png', 'jpg', 'jpeg', 'bmp', 'ppm', 'tif', 'tiff'}
         # First, count the number of samples and classes.
         self.samples = 0
 
