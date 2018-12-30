@@ -1935,7 +1935,7 @@ class DirectoryIterator(Iterator):
             if hasattr(img, 'close'): img.close()
             
             #===========================================
-            # 
+            # data augmentation
             params = self.image_data_generator.get_random_transform(x.shape)
             x = self.image_data_generator.apply_transform(x, params)
             x = self.image_data_generator.standardize(x)
