@@ -480,7 +480,7 @@ def unpack_singleton(x):
     """
     if len(x) == 1:
         return x[0]
-    return x
+    return x # return the 'original' value
 
 
 def object_list_uid(object_list):
