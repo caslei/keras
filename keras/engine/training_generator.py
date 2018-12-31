@@ -370,14 +370,14 @@ def evaluate_generator(model, generator,
         if enqueuer is not None:
             enqueuer.stop()
 
-    averages = []
+    averages = [] # a list 
     for i in range(len(outs)):
         if i not in stateful_metric_indices:
             averages.append(np.average([out[i] for out in outs_per_batch],
                                        weights=batch_sizes))
         else:
             averages.append(np.float64(outs_per_batch[-1][i]))
-    return unpack_singleton(averages)
+    return unpack_singleton(averages) # return the 'original' value, i.e., "averages"
 
 
 def predict_generator(model, generator,
