@@ -1443,7 +1443,7 @@ class Iterator(IteratorType):
         if self.index_array is None: self._set_index_array()
 
         #===========================================================
-        index_array = self.index_array[self.batch_size*idx: self.batch_size*(idx + 1)]
+        index_array = self.index_array[self.batch_size*idx: self.batch_size*(idx + 1)] #============
         #===========================================================
         return self._get_batches_of_transformed_samples(index_array)
 
@@ -1456,7 +1456,7 @@ class Iterator(IteratorType):
                     save_format,
                     subset,
                     interpolation):
-        self.image_data_generator = image_data_generator
+        self.image_data_generator = image_data_generator # "design pattern"!!!!!!!!
         self.target_size = tuple(target_size)
         if color_mode not in {'rgb', 'rgba', 'grayscale'}:
             raise ValueError('Invalid color mode:', color_mode,
@@ -1521,8 +1521,7 @@ class Iterator(IteratorType):
             else:
                 self.batch_index = 0
             self.total_batches_seen += 1
-            yield self.index_array[current_index:
-                                   current_index + self.batch_size]
+            yield self.index_array[current_index: current_index + self.batch_size] #============
 
     def __iter__(self):
         # Needed if we want to do something like:
