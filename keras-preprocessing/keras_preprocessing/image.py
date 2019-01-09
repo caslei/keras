@@ -1438,6 +1438,7 @@ class Iterator(IteratorType):
             raise ValueError('Asked to retrieve element {idx}, but the Sequence '
                              'has length {length}'.format(idx=idx, length=len(self)))
 
+        # np.random.seed() ===========================
         if self.seed is not None: np.random.seed(self.seed + self.total_batches_seen)
         self.total_batches_seen += 1
         if self.index_array is None: self._set_index_array()
@@ -1511,7 +1512,7 @@ class Iterator(IteratorType):
         self.reset()
         while 1:
             if self.seed is not None:
-                np.random.seed(self.seed + self.total_batches_seen)
+                np.random.seed(self.seed + self.total_batches_seen)   #===========================
             if self.batch_index == 0:
                 self._set_index_array()
 
